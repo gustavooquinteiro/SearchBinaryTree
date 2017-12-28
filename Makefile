@@ -12,47 +12,50 @@ C_SOURCE = $(wildcard ./src/*.c)
 H_SOURCE = $(wildcard ./src/*.h)
 
 # Arquivos objetos .o
-OBJ = $(subst .c,.o,$(subst source,objects,$(C_SOURCE)))
+OBJ = $(subst .c,.o,$(subst src,obj,$(C_SOURCE)))
 
-# Compilador utilizado GCC 7.2.1 20171128
+# Compilador utilizado 
 CC = gcc
 
-# Flags
+# Flags do compilador
 CC_FLAGS = -c \
 					-Wall \
 					-Wextra \
 					-Werror \
 					-Wpedantic \
 					-lm  
+
+# Comando de construção de diretório
+MKDIR = mkdir -p
 						
 # Comando de limpeza de alvos 
 RM = rm -rf
+RMDIR = rmdir 
 
-# Regra para compilar tudo 
 all: objFolder $(PROJ_NAME)
 
 $(PROJ_NAME): $(OBJ)
-	@ echo [COMPILING] Construindo binários usando GCC linker: $@...
-	$(CC) $^ -o $@
-	@ echo '[DONE] Construção do projeto ' $(PROJ_NAME) ' concluída'
+	@ echo '[BUILD] Construindo executável: $@...'
+	@ $(CC) $^ -o $@
+	@ echo '[DONE] Build completo'
 	
-./objects/%.o: ./src/%.c ./src/%.h
-	@ echo [COMPILING] Construindo alvo usando GCC linker: $<...
-	$(CC) -g $< $(CC_FLAGS) -o $@
+./obj/%.o: ./src/%.c ./src/%.h
+	@ echo '[BUILD] Construindo alvo: $<...'
+	@ $(CC) -g $< $(CC_FLAGS) -o $@
 	
-./objects/main.o: ./src/main.c $(H_SOURCE)
-	@ echo [COMPILING] Construindo alvo usando GCC linker: $<...
-	$(CC) -g $@ $< $(CC_FLAGS)
+./obj/main.o: ./src/main.c $(H_SOURCE)
+	@ echo '[BUILD] Construindo alvo: $<...'
+	@ $(CC) -g $< $(CC_FLAGS) -o $@
 
 objFolder:
-	@ echo [MAKE] Criando diretório para objetos... 
-	@ mkdir -p objects
-	@ echo [DONE] Diretório para objetos criado
+	@ echo '[MAKE] Criando diretório para objetos...'
+	@ $(MKDIR) obj
+	@ echo '[DONE] Diretório criado'
 	
 clean:
-	@ echo [CLEAN] Limpando objetos, executável e diretório criados...
-	@ $(RM) ./objects/*.o $(PROJ_NAME) *~
-	@ rmdir objects
-	@ echo [DONE] Limpeza concluída 
+	@ echo '[CLEAN] Limpando executável e diretório criados...'
+	@ $(RM) ./obj/*.o $(PROJ_NAME) *~
+	@ $(RMDIR) obj
+	@ echo '[DONE] Limpeza concluída'
 	
 .PHONY: all clean
