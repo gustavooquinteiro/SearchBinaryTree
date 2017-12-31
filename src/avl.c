@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "avl.h"
-
+#include "queue.h"
 /* DE UMA OLHADA NO MATERIAL Q O PROF DISPONIBILIZOU NO CLASSROOM PQ LA TEM OS ALGORITMOS E TBM NO DESCRITIVO DO TRABALHO
  * OBS IMPORTANTISSIMA: CONSIDERE O FATOR DE BALANCEAMENTO SENDO (ALTURA DA DIREITA - ALTURA DA ESQUERDA) E CONSERTAR NOS ALGORITMO 
  * OUTRA OBS IMPORTANTE: PARENTE NÃO QUER VARIAVEIS GLOBAIS ENTAO TEMOS QUE TRABALHAR COM VARIAVEIS LOCAIS E PASSA-LA POR REFERENCIA SEJA PONTEIRO 
@@ -33,8 +33,9 @@ typedef struct Arvore {
 }No;
 
 void definirArvore(No * novoNo){
-	No arvore;
+	extern No arvore;
 	arvore.raiz = inserirNo(&arvore, novoNo); 
+	arvore.pai = NULL; 
 }
 
 void criarCliente (int codigoCliente, int operacao, int valor){
@@ -51,7 +52,7 @@ void criarCliente (int codigoCliente, int operacao, int valor){
 // Aloca na memória um nó com os atributos do cliente 
 void criarNo(Cliente * novoCliente){
 	No * novoNo = (No *)malloc(sizeof(No));
-	novoNo->cliente = *novoCliente;
+	novoNo->cliente = novoCliente;
 	novoNo->direita = NULL;
 	novoNo->esquerda = NULL;
 	novoNo->pai = NULL;
@@ -148,14 +149,44 @@ void removerNo(No * noASerRemovido){
 	// TODO
 }
 
+void listarCrescente(No * raiz){
+	listarCrescente(raiz->direita);
+	printf("%d", raiz->cliente.codigoCliente);
+	listarCrescente(raiz->esquerda); 
+}
+
+void listarDecrescente(No * raiz){
+	listarDecrescente(raiz->esquerda); 
+	printf("%d", raiz->cliente.codigoCliente);
+	listarDecrescente(raiz->direita);
+}
+
+int mostrarNivel(int nivel){
+	if (!arvoreVazia()){
+		if(isNotDefined())
+			defineQueue();
+		push(getQueue, getRaiz());
+		for (register int i = 1; i<nivel; i++){
+				if (front(getQueue)->esquerda != NULL) push(getQueue, front(getQueue)->esquerda); 
+				if (front(getQueue)->direita != NULL) push(getQueue, front(getQueue)->direita); 
+				pop(getQueue); 
+		}
+		while(!isEmpty(getQueue)){
+			printf("%d", front(getQueue)->cliente.codigoCliente) 
+			pop(getQueue());
+		}
+	} else{
+		return FALSE;
+	}
+}
+
 int arvoreVazia(){
-	if (getRaiz()->raiz == NULL)
-		return TRUE;
-	return FALSE; 
+	return (getRaiz()->raiz == NULL)
 }
 
 No * getRaiz(){
-	return * arvore; 
+	static No * external_root = &arvore;
+	return  external_root; 
 }
 
 No * getNo(){

@@ -19,11 +19,11 @@ CC = gcc
 
 # Flags do compilador
 CC_FLAGS = -c \
-					-Wall \
-					-Wextra \
-					-Werror \
-					-Wpedantic \
-					-lm  
+           -Wall \
+           -Wextra \
+           -Werror \
+           -Wpedantic \
+           -lm  
 
 # Comando de construção de diretório
 MKDIR = mkdir -p

@@ -12,7 +12,7 @@ void insereNo(){
 	criarCliente(codigoCliente, operacao, valor);
 	if (arvoreVazia()){
 		definirArvore(getNo()); 
-	}else{
+	} else{
 		inserirNo(getRaiz(), getNo()); 
 	}
 }
@@ -22,7 +22,7 @@ void buscaNo(){
 	scanf ("%d", &chave);
 	if (busca(getRaiz(), chave) == NULL){
 		printf("nao existe no com chave: %d", chave);
-	}else{
+	} else{
 		printf("existe no com chave: %d", chave);
 	}
 }
@@ -39,13 +39,13 @@ void listarNos(char opcao){
 		scanf("%c", &ordem); 
 		print(ordem);
 		if (ordem == DECRESCENT_ORDER)
-			//Chamar funcao listarDecrescente();
+			listarDecrescente(getRaiz());
 		if (ordem == CRESCENT_ORDER)
-			//Chamar funcao listarCrescente();
-	}else{
+			listarCrescente(getRaiz());
+	} else{
 		int nivel;
 		scanf("%d", &nivel); 
-		// Chamar funcao mostrarNivel(nivel)
+		mostrarNivel(nivel)
 	}
 }
 
@@ -77,5 +77,5 @@ int main(){
 		}
 	}
 	//exibirRelatorio(); 
-	return 0;
+	return ZERO;
 }
