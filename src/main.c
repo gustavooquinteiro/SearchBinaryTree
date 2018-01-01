@@ -1,9 +1,37 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "avl.h"
+#include "queue.h"
+#include "main.h"
+
+void main(){
+	char opcao;
+	while (scanf ("%c", &opcao) && opcao != END){
+		print(opcao);
+		switch(opcao){
+			case INSERT:
+				insereNo(); 
+			break; 
+			case SEARCH:
+				buscaNo();
+			break;
+			case REMOVE:
+				removeNo();
+			break;
+			case ORDER_LIST:
+			case LEVEL_LIST:
+				listarNos(opcao);
+			break;
+			case HEIGHT:
+				mostrarAltura();
+			break;
+		}
+	}
+	//exibirRelatorio(); 
+}
 
 void print (char opcao){
-	printf("%c", opcao); 
+	printf("%c :", opcao); 
 }
 
 void insereNo(){
@@ -40,7 +68,7 @@ void listarNos(char opcao){
 		print(ordem);
 		if (ordem == DECRESCENT_ORDER)
 			listarDecrescente(getRaiz());
-		if (ordem == CRESCENT_ORDER)
+		else
 			listarCrescente(getRaiz());
 	} else{
 		int nivel;
@@ -51,31 +79,4 @@ void listarNos(char opcao){
 
 void mostrarAltura(){
 	printf("%d", getAltura(getRaiz()));
-}
-
-int main(){
-	char opcao;
-	while (scanf ("%c", &opcao) && opcao != END){
-		print(opcao);
-		switch(opcao){
-			case INSERT:
-				insereNo(); 
-			break; 
-			case SEARCH:
-				buscaNo();
-			break;
-			case REMOVE:
-				removeNo();
-			break;
-			case ORDER_LIST:
-			case LEVEL_LIST:
-				listarNos(opcao);
-			break;
-			case HEIGHT:
-				mostrarAltura();
-			break;
-		}
-	}
-	//exibirRelatorio(); 
-	return ZERO;
 }

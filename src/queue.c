@@ -1,6 +1,5 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include "avl.h"
+#include <stdlib.h>
 #include "queue.h"
 
 typedef struct Arvore{
@@ -11,45 +10,46 @@ typedef struct Arvore{
 } No;
 
 typedef struct fila{
-	No node; 	
+	No * node; 	
 	struct fila * next;
 	struct fila * begin;
 	struct fila * end;
 } Queue; 
 
-void defineQueue(){
-	extern Queue queue; 
-	queue.begin = NULL;
-	queue.end = NULL;
+void defineQueue(No * node){
+	extern Queue definedQueue; 
+	definedQueue.end = definedQueue.begin = push(&definedQueue, node);
 }
 
-int push(Queue * queue, No newNode){
+Queue * push(Queue * queue, No * newNode){
 	Queue * new = (Queue *)malloc(sizeof(Queue)); 
-	if (new == NULL)
-		return FALSE;
-	new->node = newNode; 
-	new->next = NULL;
-	if (isEmpty(queue)){
-		queue->begin = new;
+	if (!new){
+		perror(ERROR); 
+		exit(TRUE);
 	} else{
-		queue->end->next = new;
+		new->node = newNode; 
+		new->next = NULL;
+		if (isEmpty(queue)){
+			queue->begin = new;
+		} else{
+			queue->end->next = new;
+		}
+		queue->end = new;
 	}
-	queue->end = new;
-	return TRUE; 
+	return queue; 
 }
 
-int pop(Queue * queue){
+void pop(Queue * queue){
 	Queue *aux;
 	if (isEmpty(queue)){
 		queue->end = NULL;
-		return FALSE;
+	} else{
+		aux = queue->begin;
+		queue->begin = aux->next; 		 
+		free(aux);
 	}
-	aux = queue->begin;
-	queue->begin = aux->next; 		 
-	free(aux);
-	return TRUE;
 }
-
+	
 int isEmpty(Queue *queue){
 	return (queue->begin == NULL); 
 }
@@ -65,6 +65,6 @@ Queue * front (Queue * queue){
 }
 
 Queue * getQueue(){
-	Queue * originalQueue = & queue;
+	static Queue * originalQueue = &definedQueue;
 	return originalQueue;
 }
