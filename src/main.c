@@ -1,19 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "avl.h"
-#include "queue.h"
-#include "main.h"
+#include "../lib/avl.h"
+#include "../lib/main.h"
+#include "../lib/queue.h"
 
-void main(){
+extern int chave; 
+
+int main(){
 	char opcao;
 	while (scanf ("%c", &opcao) && opcao != END){
-		print(opcao);
+		printf("%c :", opcao); 
 		switch(opcao){
 			case INSERT:
 				insereNo(); 
 			break; 
 			case SEARCH:
-				buscaNo();
+				if (buscaNo()){
+					printf("%s %d", FOUND_KEY, getChave());
+				} else{
+					printf("%s %d", NOT_FOUND_KEY, getChave());			
+				}
 			break;
 			case REMOVE:
 				removeNo();
@@ -28,44 +34,33 @@ void main(){
 		}
 	}
 	//exibirRelatorio(); 
-}
-
-void print (char opcao){
-	printf("%c :", opcao); 
+	exit(EXIT_SUCCESS);
 }
 
 void insereNo(){
 	int codigoCliente, valor, operacao;
 	scanf("%d %d %d", &codigoCliente, &operacao, &valor);
-	criarCliente(codigoCliente, operacao, valor);
-	if (arvoreVazia()){
-		definirArvore(getNo()); 
-	} else{
-		inserirNo(getRaiz(), getNo()); 
-	}
+	Node * novoNo = criarCliente(codigoCliente, operacao, valor);
+	if (arvoreVazia())
+		definirArvore(novoNo); 
+	inserirNo(getRaiz(), novoNo); 
 }
 
-void buscaNo(){
-	int chave; 
+Node * buscaNo(){
 	scanf ("%d", &chave);
-	if (busca(getRaiz(), chave) == NULL){
-		printf("nao existe no com chave: %d", chave);
-	} else{
-		printf("existe no com chave: %d", chave);
-	}
+	return (busca(getRaiz(), chave));
 }
 
 void removeNo(){
-	int chave; 
-	scanf ("%d", &chave);
-	removerNo(busca(getRaiz(), chave));
+	scanf("%d", &chave);
+	removerNo(busca(getRaiz(), chave), chave);
 }
 
 void listarNos(char opcao){
 	if (opcao == ORDER_LIST){
 		char ordem; 
 		scanf("%c", &ordem); 
-		print(ordem);
+		printf("%c :", ordem); 
 		if (ordem == DECRESCENT_ORDER)
 			listarDecrescente(getRaiz());
 		else
@@ -73,10 +68,15 @@ void listarNos(char opcao){
 	} else{
 		int nivel;
 		scanf("%d", &nivel); 
-		mostrarNivel(nivel)
+		mostrarNivel(nivel);
 	}
 }
 
 void mostrarAltura(){
 	printf("%d", getAltura(getRaiz()));
+}
+
+int getChave(){
+	static int * key = &chave;
+	return *(key); 
 }

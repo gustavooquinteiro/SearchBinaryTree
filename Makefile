@@ -9,7 +9,7 @@ PROJ_NAME = SearchBinaryTree
 C_SOURCE = $(wildcard ./src/*.c)
 
 # Arquivos .h
-H_SOURCE = $(wildcard ./src/*.h)
+H_SOURCE = $(wildcard ./lib/*.h)
 
 # Arquivos objetos .o
 OBJ = $(subst .c,.o,$(subst src,obj,$(C_SOURCE)))
@@ -39,14 +39,10 @@ $(PROJ_NAME): $(OBJ)
 	@ $(CC) $^ -o $@
 	@ echo '[DONE] Build completo'
 	
-./obj/%.o: ./src/%.c ./src/%.h
+./obj/%.o: ./src/%.c ./lib/%.h
 	@ echo '[BUILD] Construindo alvo: $<...'
 	@ $(CC) -g $< $(CC_FLAGS) -o $@
 	
-./obj/main.o: ./src/main.c $(H_SOURCE)
-	@ echo '[BUILD] Construindo alvo: $<...'
-	@ $(CC) -g $< $(CC_FLAGS) -o $@
-
 objFolder:
 	@ echo '[MAKE] Criando diretório para objetos...'
 	@ $(MKDIR) obj

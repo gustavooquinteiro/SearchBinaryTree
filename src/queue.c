@@ -1,31 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
+#include "../lib/avl.h"
+#include "../lib/queue.h"
 
-typedef struct Arvore{
+// Declaração das structs
+typedef struct cliente{
 	int codigoCliente;
-	struct Arvore * father; 
-	struct Arvore * left;
-	struct Arvore * right;
-} No;
+	int operacao;
+	int valor;
+	int saldo;
+	int quantidadeOperacoes; 
+} Client;
 
-typedef struct fila{
-	No * node; 	
-	struct fila * next;
-	struct fila * begin;
-	struct fila * end;
+typedef struct tree{
+	Client client;
+	struct tree *right;
+	struct tree *left;
+	struct tree *dad;
+	int height;
+} Node;
+
+typedef struct queue{
+	Node * node; 	
+	struct queue * next;
+	struct queue * begin;
+	struct queue * end;
 } Queue; 
 
-void defineQueue(No * node){
-	extern Queue definedQueue; 
-	definedQueue.end = definedQueue.begin = push(&definedQueue, node);
+Queue * defineQueue(){
+	Queue * line = (Queue *)malloc(sizeof(Queue));
+	if (!line){
+		return NULL;
+	} else{
+		line->begin = NULL;
+		line->end = NULL;
+		line->next = NULL;
+		return line;
+	}
 }
 
-Queue * push(Queue * queue, No * newNode){
+Queue * push(Queue * queue, Node * newNode){
 	Queue * new = (Queue *)malloc(sizeof(Queue)); 
 	if (!new){
 		perror(ERROR); 
-		exit(TRUE);
+		exit(EXIT_FAILURE);
 	} else{
 		new->node = newNode; 
 		new->next = NULL;
@@ -42,7 +60,7 @@ Queue * push(Queue * queue, No * newNode){
 void pop(Queue * queue){
 	Queue *aux;
 	if (isEmpty(queue)){
-		queue->end = NULL;
+		free(queue);
 	} else{
 		aux = queue->begin;
 		queue->begin = aux->next; 		 
@@ -54,17 +72,6 @@ int isEmpty(Queue *queue){
 	return (queue->begin == NULL); 
 }
 
-int isNotDefined(){
-	return (getQueue() == NULL);
-}
-
-Queue * front (Queue * queue){
-	if (!isEmpty(queue))
-		return queue->begin; 
-	return NULL; 
-}
-
-Queue * getQueue(){
-	static Queue * originalQueue = &definedQueue;
-	return originalQueue;
+Node * front (Queue * queue){
+	return queue->node; 
 }
