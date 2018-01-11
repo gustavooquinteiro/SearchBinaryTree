@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/avl.h"
 #include "../lib/queue.h"
 
 // Declaração das structs
@@ -12,7 +11,7 @@ typedef struct cliente{
 	int quantidadeOperacoes; 
 } Client;
 
-typedef struct tree{
+typedef struct no{
 	Client client;
 	struct tree *right;
 	struct tree *left;
@@ -30,7 +29,8 @@ typedef struct queue{
 Queue * defineQueue(){
 	Queue * line = (Queue *)malloc(sizeof(Queue));
 	if (!line){
-		return NULL;
+		perror(ERROR);
+		exit(EXIT_FAILURE); 
 	} else{
 		line->begin = NULL;
 		line->end = NULL;
@@ -73,5 +73,5 @@ int isEmpty(Queue *queue){
 }
 
 Node * front (Queue * queue){
-	return queue->node; 
+	return !isEmpty(queue)? queue->begin->node: NULL; 
 }

@@ -2,34 +2,29 @@
 #include <stdlib.h>
 #include "../lib/avl.h"
 #include "../lib/main.h"
-#include "../lib/queue.h"
-
-extern int chave; 
 
 int main(){
+	AVLtree * arvoreAVL = definirArvore();
 	char opcao;
-	while (scanf ("%c", &opcao) && opcao != END){
-		printf("%c :", opcao); 
+	while (scanf("%c", &opcao) && opcao != END){
 		switch(opcao){
 			case INSERT:
-				insereNo(); 
+				insereNo(arvoreAVL);
 			break; 
 			case SEARCH:
-				if (buscaNo()){
-					printf("%s %d", FOUND_KEY, getChave());
-				} else{
-					printf("%s %d", NOT_FOUND_KEY, getChave());			
-				}
+				buscaNo(arvoreAVL);
 			break;
 			case REMOVE:
-				removeNo();
+				//removeNo(raiz);
 			break;
 			case ORDER_LIST:
+				listarNos(arvoreAVL);
+			break;
 			case LEVEL_LIST:
-				listarNos(opcao);
+				listarNivel(arvoreAVL);
 			break;
 			case HEIGHT:
-				mostrarAltura();
+				mostrarAltura(arvoreAVL);
 			break;
 		}
 	}
@@ -37,46 +32,37 @@ int main(){
 	exit(EXIT_SUCCESS);
 }
 
-void insereNo(){
+void insereNo(AVLtree * arvoreAVL){
 	int codigoCliente, valor, operacao;
 	scanf("%d %d %d", &codigoCliente, &operacao, &valor);
 	Node * novoNo = criarCliente(codigoCliente, operacao, valor);
-	if (arvoreVazia())
-		definirArvore(novoNo); 
-	inserirNo(getRaiz(), novoNo); 
+	definirRaiz(arvoreAVL, novoNo); 
 }
 
-Node * buscaNo(){
+void buscaNo(AVLtree * arvoreAVL){
+	int chave;
 	scanf ("%d", &chave);
-	return (busca(getRaiz(), chave));
+	printf("%s %d\n", busca(getRaiz(arvoreAVL), chave)? FOUND_KEY: NOT_FOUND_KEY, chave);			
 }
 
-void removeNo(){
+/*void removeNo(Node * raiz){
+	int chave;
 	scanf("%d", &chave);
-	removerNo(busca(getRaiz(), chave), chave);
+	//removerNo(raiz, chave);
+}*/
+
+void listarNos(AVLtree * arvoreAVL){
+	char ordem; 
+	scanf("%c", &ordem); 
+	ordem == DECRESCENT_ORDER? listarDecrescente(getRaiz(arvoreAVL)): listarCrescente(getRaiz(arvoreAVL));
 }
 
-void listarNos(char opcao){
-	if (opcao == ORDER_LIST){
-		char ordem; 
-		scanf("%c", &ordem); 
-		printf("%c :", ordem); 
-		if (ordem == DECRESCENT_ORDER)
-			listarDecrescente(getRaiz());
-		else
-			listarCrescente(getRaiz());
-	} else{
-		int nivel;
-		scanf("%d", &nivel); 
-		mostrarNivel(nivel);
-	}
+void listarNivel(AVLtree * arvoreAVL){
+	int nivel;
+	scanf("%d", &nivel); 
+	mostrarNivel(nivel, arvoreAVL);	
 }
 
-void mostrarAltura(){
-	printf("%d", getAltura(getRaiz()));
-}
-
-int getChave(){
-	static int * key = &chave;
-	return *(key); 
+void mostrarAltura(AVLtree * arvoreAVL){
+	printf("%d\n", !getRaiz(arvoreAVL) ? ZERO: getAltura(getRaiz(arvoreAVL))+ONE);
 }

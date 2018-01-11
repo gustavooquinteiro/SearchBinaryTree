@@ -22,35 +22,48 @@ typedef struct cliente{
 	int quantidadeOperacoes; 
 } Client;
 
-typedef struct tree{
+typedef struct no{
 	Client client;
-	struct tree *right;
-	struct tree *left;
-	struct tree *dad;
+	struct no *right;
+	struct no *left;
+	struct no *dad;
 	int height;
+	int balanceFactor; 
 } Node;
 
-extern Node * raiz; 
+typedef struct tree{
+	Node * root;
+	int treeHeight;
+} AVLtree; 
 
-void definirArvore(Node * novoNo){
-	raiz = (Node *)malloc(sizeof(Node));
-	if (!raiz){
+AVLtree * definirArvore(){
+	AVLtree * arvore = (AVLtree *)malloc(sizeof(AVLtree));
+	if (!arvore){
+		// perror() da stdio.h para lançar na saída padrão o texto ERROR (da queue.h) junto com o erro especifico
 		perror(ERROR);
-		exit(EXIT_FAILURE);	
-	} 
-	raiz = inserirNo(raiz, novoNo); 
-	raiz->dad = NULL; 
+		//exit() da stdlib.h para interromper a execução do programa com o código de falha
+		exit(EXIT_FAILURE);
+	}
+	
+	// Define arvore com altura 0, i.e arvore vazia
+	arvore->treeHeight = getAltura(arvore->root) + ONE;
+	return arvore;
+}
+
+Node * definirRaiz(AVLtree * arvore, Node * novoNo){
+	arvore->root = inserirNo(isTreeEmpty(arvore), novoNo); 
+	arvore->treeHeight = getAltura(arvore->root) + ONE;	
+	return arvore->root;
 }
 
 Node * criarCliente (int codigoCliente, int operacao, int valor){
 	Client * novoCliente = (Client *)malloc(sizeof(Client));
 	if (!novoCliente){
-		// perror() da biblioteca stdio.h para lançar na saída padrão o texto ERROR (da queue.h) junto com o erro especifico
 		perror(ERROR);
 		exit(EXIT_FAILURE);
 	} else{
 		novoCliente->codigoCliente = codigoCliente;
-		novoCliente->operacao = operacao;
+		novoCliente->operacao = operacao;		
 		novoCliente->valor = valor;
 		novoCliente->saldo = ZERO;
 		novoCliente->quantidadeOperacoes = ONE; 
@@ -69,63 +82,67 @@ Node * criarNo(Client * novoCliente){
 		novoNo->right = NULL;
 		novoNo->left = NULL;
 		novoNo->dad = NULL;
-		novoNo->height = ZERO;
 	}
 	return novoNo;
 }
 
 // Função que insere o nó na arvore 
-Node * inserirNo(Node * arvore, Node * noAtual){
-	if (!arvore){
-		return noAtual;
-	}else{
-		if (noAtual->client.codigoCliente > arvore->client.codigoCliente)
-			noAtual->right = inserirNo(arvore->right, noAtual);
-			
-		if (noAtual->client.codigoCliente == arvore->client.codigoCliente)
-			arvore = atualizarCliente(noAtual, arvore);
-			
-		if (noAtual->client.codigoCliente < arvore->client.codigoCliente)
-			noAtual->left = inserirNo(arvore->left, noAtual);
+Node * inserirNo(Node * raiz, Node * noAtual){
 	
-		noAtual->height = getAltura(noAtual);
-		//abs(), da biblioteca <stdio.h>, retorna valor absoluto, i.e, módulo do número 
-		if (abs(getAltura(noAtual->right) - getAltura(noAtual->left)) == TWO)
-			balanceamento(noAtual);
+	if (raiz){
+		if (noAtual->client.codigoCliente > raiz->client.codigoCliente){
+			raiz->right = inserirNo(raiz->right, noAtual);
+			raiz->right->dad = raiz;
+		}
 			
-		return noAtual;
+		if (noAtual->client.codigoCliente == raiz->client.codigoCliente)
+			raiz = atualizarCliente(noAtual, raiz);
+			
+		if (noAtual->client.codigoCliente < raiz->client.codigoCliente){
+			raiz->left = inserirNo(raiz->left, noAtual);
+		}
+		raiz->height = getAltura(raiz);
+		raiz->balanceFactor = getAltura(raiz->right) - getAltura(raiz->left); 
+		//abs(numero), da stdio.h, retorna valor absoluto, i.e, módulo do número 
+		if (abs(raiz->balanceFactor) == UNBALANCED_TREE_MODULE)
+			raiz = balanceamento(raiz);		
+		
+	}else{
+		raiz = noAtual; 
+		raiz->balanceFactor = ZERO;
 	}
+	return raiz;
 }
 
-// Função que atualiza os dados do cliente e retorna o Node com os dados devidamente atualizados
+// Função que atualiza os dados do cliente e retorna o no com os dados devidamente atualizados
 Node * atualizarCliente(Node * noAtual, Node * arvore){
-	arvore->client.quantidadeOperacoes++; 
 	//Depósito
 	if (noAtual->client.operacao == ZERO){
 		arvore->client.saldo += noAtual->client.valor;
 	//Saque
 	} else
 		arvore->client.saldo -= noAtual->client.valor;
+	arvore->client.quantidadeOperacoes++; 
 	return arvore;
 }
 
 // Função que faz o balanceamento da arvore
 // OBS: NAO SEI SE AS ROTAÇÕES SÃO ESSAS MESMAS PQ DO CRITERIO DE BALANCEAMENTO Q O PROF QUER TÁ INVERTIDO NOS ALGORITMO
 Node * balanceamento(Node * x){
-	if(getAltura(x->right) - getAltura(x->left) == UNBALANCED_TREE_RIGHT){
+	if(x->balanceFactor == UNBALANCED_TREE_RIGHT){
 		Node * y = x->left;
-		if(getAltura(y->right) - getAltura(y->left) == BALANCED_TREE_RIGHT){
+		if(y->balanceFactor == BALANCED_TREE_LEFT){
 			// Rotação dupla a esquerda 
 		} else{
 			// Rotação a esquerda 
 		}
-	}else if (getAltura(x->right) - getAltura(x->left) == UNBALANCED_TREE_LEFT){
+	}else if (x->balanceFactor == UNBALANCED_TREE_LEFT){
 		Node * y = x->right;
-		if (getAltura(y->right) - getAltura(y->left) == BALANCED_TREE_RIGHT){
-			// Rotação dupla a right
+		if (y->balanceFactor == BALANCED_TREE_LEFT){
+			// Rotação dupla a direita
 		}else{
 			// Rotação a direita
-		}
+		}	
 	}
 	return x; 
 }
@@ -142,22 +159,21 @@ int maximo(int esquerda, int direita){
 }
 
 // Função que retorna a altura de determinado no da arvore
-int getAltura(Node * arvore){
-	if (!arvore)
-		return -ONE; 
-	arvore->height = maximo(getAltura(arvore->left), getAltura(arvore->right)) + ONE;
-	return arvore->height;
+int getAltura(Node * node){
+	if (!node)
+		return MINUS_ONE; 
+	node->height = maximo(getAltura(node->left), getAltura(node->right)) + ONE;
+	return node->height;
 }
 
 // Função de busca da chave na arvore 
 Node * busca(Node * arvore, int chave){
 	if (!arvore || chave == arvore->client.codigoCliente)
 		return arvore;
-	if (chave < arvore->client.codigoCliente)
+	if (chave < arvore->client.codigoCliente){
 		return busca(arvore->left, chave);
-	else 
+	} else 
 		return busca(arvore->right, chave);
-	
 }
 
 /*void removerNo(Node * arvore, int chave){
@@ -165,30 +181,28 @@ Node * busca(Node * arvore, int chave){
 }*/
 
 // Função que lista todos os nós da arvore em ordem crescente
-void listarCrescente(Node * raiz){
-	listarCrescente(raiz->left);
-	printf("%d \n %d \n %d \n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
-	listarCrescente(raiz->right); 
+Node * listarCrescente(Node * raiz){
+	if (!raiz->left) listarCrescente(raiz->left);
+	printf("%d\n %d\n %d\n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
+	if (!raiz->right) listarCrescente(raiz->right); 
+	return raiz; 
 }
 
 // Função que lista todos os nós da arvore em ordem decrescente
-void listarDecrescente(Node * raiz){
-	listarDecrescente(raiz->right); 
-	printf("%d \n %d \n %d \n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
-	listarDecrescente(raiz->left);
+Node * listarDecrescente(Node * raiz){
+	if (!raiz->right) listarDecrescente(raiz->right); 
+	printf("%d \n %d\n %d\n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
+	if (!raiz->left) listarDecrescente(raiz->left);
+	return raiz;
 }
 
 // Função que lista todos os nós da arvore em um determinado nível
-void mostrarNivel(int nivel){
-	if (!arvoreVazia()){
-		// Se eu não conseguir definir uma queue (retorno de defineQueue == NULL) dê erro de alocação e saia
-		Queue * fila = defineQueue();
-		if(!fila){
-			perror(ERROR);
-			exit(EXIT_FAILURE);
-		}
-		push(fila, getRaiz());
-		for (register int i = ONE; i < nivel; i++){
+void mostrarNivel(int nivel, AVLtree * arvore){
+	Node * raiz = getRaiz(arvore);
+	if (raiz){
+		Queue * fila = defineQueue();	
+		fila = push(fila, raiz);
+		for (register int iterator = ZERO; iterator < nivel; iterator++){
 				if (isEmpty(fila)) break;
 				// Se existe filho a esquerda coloca na fila 
 				if (front(fila)->left) push(fila, front(fila)->left); 
@@ -200,14 +214,21 @@ void mostrarNivel(int nivel){
 			printf("%d \n", front(fila)->client.codigoCliente); 
 			pop(fila);
 		}
-	} 
+	}
+} 
+
+Node * isTreeEmpty(AVLtree * arvore){
+	if (arvore->treeHeight == ZERO) 
+		return NULL;	
+	return arvore->root;
 }
 
-// Verifica se a arvore está vazia
-Node * arvoreVazia(){
-	return getRaiz();  
+Node * isRootDefined(AVLtree * arvore){
+	if (!arvore->root)
+		return NULL;
+	return arvore->root;
 }
 
-Node * getRaiz(){
-	return raiz;
+Node * getRaiz(AVLtree * arvore){
+	return isRootDefined(arvore); 
 }

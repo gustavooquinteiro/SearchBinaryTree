@@ -23,26 +23,24 @@ CC_FLAGS = -c \
            -Wextra \
            -Werror \
            -Wpedantic \
-           -lm  
 
 # Comando de construção de diretório
 MKDIR = mkdir -p
 						
 # Comando de limpeza de alvos 
 RM = rm -rf
-RMDIR = rmdir 
 
 all: objFolder $(PROJ_NAME)
 
 $(PROJ_NAME): $(OBJ)
-	@ echo '[BUILD] Construindo executável: $@...'
+	@ echo '[BUILD] Construindo binário $@...'
 	@ $(CC) $^ -o $@
 	@ echo '[DONE] Build completo'
 	
 ./obj/%.o: ./src/%.c ./lib/%.h
-	@ echo '[BUILD] Construindo alvo: $<...'
-	@ $(CC) -g $< $(CC_FLAGS) -o $@
-	
+	@ echo '[BUILD] Construindo objeto $@...'
+	@ $(CC) $< $(CC_FLAGS) -o $@
+		
 objFolder:
 	@ echo '[MAKE] Criando diretório para objetos...'
 	@ $(MKDIR) obj
@@ -50,8 +48,7 @@ objFolder:
 	
 clean:
 	@ echo '[CLEAN] Limpando executável e diretório criados...'
-	@ $(RM) ./obj/*.o $(PROJ_NAME) *~
-	@ $(RMDIR) obj
+	@ $(RM) obj $(PROJ_NAME) *~
 	@ echo '[DONE] Limpeza concluída'
 	
 .PHONY: all clean

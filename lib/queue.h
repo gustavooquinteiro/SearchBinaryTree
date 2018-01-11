@@ -4,7 +4,7 @@
 #define ERROR "Dynamic allocation failed"
 
 typedef struct queue Queue;
-typedef struct tree Node;
+typedef struct no Node;
 typedef struct cliente Client;
 
 Queue * defineQueue();
