@@ -11,8 +11,8 @@
 #define ORDER_LIST 'p'
 #define DECRESCENT_ORDER 'd'
 
-#define FOUND_KEY "existe no com chave:"
-#define NOT_FOUND_KEY "nao existe no com chave:"
+#define FOUND_KEY_MESSAGE "existe no com chave:"
+#define NOT_FOUND_KEY_MESSAGE "nao existe no com chave:"
 
 void insereNo(AVLtree * tree);
 void buscaNo(AVLtree * tree);

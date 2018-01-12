@@ -27,15 +27,15 @@ typedef struct queue{
 } Queue; 
 
 Queue * defineQueue(){
-	Queue * line = (Queue *)malloc(sizeof(Queue));
-	if (!line){
+	Queue * queue = (Queue *)malloc(sizeof(Queue));
+	if (!queue){
 		perror(ERROR);
 		exit(EXIT_FAILURE); 
 	} else{
-		line->begin = NULL;
-		line->end = NULL;
-		line->next = NULL;
-		return line;
+		queue->begin = NULL;
+		queue->end = NULL;
+		queue->next = NULL;
+		return queue;
 	}
 }
 
@@ -60,12 +60,12 @@ Queue * push(Queue * queue, Node * newNode){
 void pop(Queue * queue){
 	Queue *aux;
 	if (isEmpty(queue)){
-		free(queue);
+		clearQueue(queue);
 	} else{
 		aux = queue->begin;
 		queue->begin = aux->next; 		 
-		free(aux);
 	}
+	free(aux);
 }
 	
 int isEmpty(Queue *queue){
@@ -74,4 +74,9 @@ int isEmpty(Queue *queue){
 
 Node * front (Queue * queue){
 	return !isEmpty(queue)? queue->begin->node: NULL; 
+}
+
+void clearQueue(Queue * queue){
+	if (queue)
+		free(queue); 
 }

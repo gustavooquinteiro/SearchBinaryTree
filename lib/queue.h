@@ -11,7 +11,6 @@ Queue * defineQueue();
 Queue * push(Queue * queue, Node * newNode);
 void pop(Queue * queue);
 int isEmpty(Queue * queue);
-int isNotDefined();
 Node * front (Queue * queue);
-
+void clearQueue(Queue * queue);
 #endif

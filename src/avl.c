@@ -4,14 +4,10 @@
 #include "../lib/queue.h"
 
 /* DE UMA OLHADA NO MATERIAL Q O PROF DISPONIBILIZOU NO CLASSROOM PQ LA TEM OS ALGORITMOS E TBM NO DESCRITIVO DO TRABALHO
- * OBS IMPORTANTISSIMA: CONSIDERE O FATOR DE BALANCEAMENTO SENDO (ALTURA DA DIREITA - ALTURA DA ESQUERDA) E CONSERTAR NOS ALGORITMO 
  * OUTRA OBS IMPORTANTE: PARENTE NÃO QUER VARIAVEIS GLOBAIS ENTAO TEMOS QUE TRABALHAR COM VARIAVEIS LOCAIS E PASSA-LA POR REFERENCIA DE PONTEIRO 
- * PRA FAZER (OLHA O TRELLO TBM):
- * Rotações todas 
- * Remoção de nó (OBS MT IMPORTANTE: Usar free(noAserRemovido) para desalocar da memoria perdemos pontos no trabalho passado pq nao usamos esse free)
+ * Remoção de nó (OBS MT IMPORTANTE: Usar free(noAserRemovido) para desalocar da memoria perdemos pontos no trabalho passado pq nao usamos esse free) ESSA MERDAA
  * Mostrar por nivel (TA MEIO FEITO OLHA O queue.c TEM MEU AVAL PRA MEXER LÁ)
- * Exibir relatorio pela ordem de remoção? (nao entendi mt bem essa ordem mas enfim)
- * NESSE TRABALHO NAO TEM MUITO ARQUIVO PRA DIVIDIR ENTAO VAI SER ASSIM: UM MEXE NO CODIGO DE CADA VEZ DPS A GENTE SE JUNTA PRA DAR UMA REVISADA GERAL
+ * Exibir relatorio pela ordem de remoção
  * */
 // Declaração das structs
 typedef struct cliente{
@@ -28,7 +24,6 @@ typedef struct no{
 	struct no *left;
 	struct no *dad;
 	int height;
-	int balanceFactor; 
 } Node;
 
 typedef struct tree{
@@ -50,10 +45,10 @@ AVLtree * definirArvore(){
 	return arvore;
 }
 
-Node * definirRaiz(AVLtree * arvore, Node * novoNo){
+AVLtree * definirRaiz(AVLtree * arvore, Node * novoNo){
 	arvore->root = inserirNo(isTreeEmpty(arvore), novoNo); 
 	arvore->treeHeight = getAltura(arvore->root) + ONE;	
-	return arvore->root;
+	return arvore;
 }
 
 Node * criarCliente (int codigoCliente, int operacao, int valor){
@@ -88,28 +83,29 @@ Node * criarNo(Client * novoCliente){
 
 // Função que insere o nó na arvore 
 Node * inserirNo(Node * raiz, Node * noAtual){
-	
-	if (raiz){
-		if (noAtual->client.codigoCliente > raiz->client.codigoCliente){
-			raiz->right = inserirNo(raiz->right, noAtual);
-			raiz->right->dad = raiz;
-		}
-			
-		if (noAtual->client.codigoCliente == raiz->client.codigoCliente)
-			raiz = atualizarCliente(noAtual, raiz);
-			
-		if (noAtual->client.codigoCliente < raiz->client.codigoCliente){
-			raiz->left = inserirNo(raiz->left, noAtual);
-		}
-		raiz->height = getAltura(raiz);
-		raiz->balanceFactor = getAltura(raiz->right) - getAltura(raiz->left); 
-		//abs(numero), da stdio.h, retorna valor absoluto, i.e, módulo do número 
-		if (abs(raiz->balanceFactor) == UNBALANCED_TREE_MODULE)
-			raiz = balanceamento(raiz);		
-		
-	}else{
-		raiz = noAtual; 
-		raiz->balanceFactor = ZERO;
+	if (!raiz){
+		printf("INSERINDO NO NUMA FOLHA\n");
+		return noAtual; 
+	}
+	if (noAtual->client.codigoCliente > raiz->client.codigoCliente){
+		printf("INSERINDO NO A DIREITA DA RAIZ\n");
+		raiz->right = inserirNo(raiz->right, noAtual);
+		raiz->right->dad = raiz;
+	}
+
+	if (noAtual->client.codigoCliente == raiz->client.codigoCliente)
+		raiz = atualizarCliente(noAtual, raiz);
+
+	if (noAtual->client.codigoCliente < raiz->client.codigoCliente){
+		printf("INSERINDO NO A ESQUERDA DA RAIZ\n");
+		raiz->left = inserirNo(raiz->left, noAtual);
+		raiz->left->dad = raiz;	
+	}
+	raiz->height = getAltura(raiz);		
+	//abs(int __x), da stdio.h, retorna valor absoluto, i.e, módulo do número 
+	if (abs(getBalanceFactor(raiz)) == UNBALANCED_TREE_MODULE){
+		printf("DESBALANCEOU \n");
+		raiz = balanceamento(raiz);			
 	}
 	return raiz;
 }
@@ -127,33 +123,34 @@ Node * atualizarCliente(Node * noAtual, Node * arvore){
 }
 
 // Função que faz o balanceamento da arvore
-// OBS: NAO SEI SE AS ROTAÇÕES SÃO ESSAS MESMAS PQ DO CRITERIO DE BALANCEAMENTO Q O PROF QUER TÁ INVERTIDO NOS ALGORITMO
 Node * balanceamento(Node * x){
-	if(x->balanceFactor == UNBALANCED_TREE_RIGHT){
+	if (getBalanceFactor(x) == UNBALANCED_TREE_LEFT){
 		Node * y = x->left;
-		if(y->balanceFactor == BALANCED_TREE_LEFT){
-			// Rotação dupla a esquerda 
-		} else{
-			// Rotação a esquerda 
-		}
-	}else if (x->balanceFactor == UNBALANCED_TREE_LEFT){
-		Node * y = x->right;
-		if (y->balanceFactor == BALANCED_TREE_LEFT){
+		if (getBalanceFactor(y) == BALANCED_TREE_RIGHT){
 			// Rotação dupla a direita
+			x = rotacaoEsquerdaDireita(x); 
 		}else{
 			// Rotação a direita
-		}	
+			x = rotacaoDireita(x);
+		}
+	} else{
+		Node * y = x->right;
+		if(getBalanceFactor(y) == BALANCED_TREE_LEFT){
+			// Rotação dupla a esquerda
+			x = rotacaoDireitaEsquerda(x);
+		} else{
+			// Rotação a esquerda
+			x = rotacaoEsquerda(x);
+		}
 	}
 	return x; 
 }
 
-/* Função que retorna o maior valor entre os dois parametros recebidos 
- * Mesma coisa q 
- * if (esquerda > direita)
- * 	return esquerda
- * else
- * 	return direita
- * */
+int getBalanceFactor(Node * no){
+	return no? getAltura(no->right) - getAltura(no->left): ZERO; 
+}
+
+// Função que retorna o maior valor entre os dois parametros recebidos 
 int maximo(int esquerda, int direita){
 	return esquerda > direita ? esquerda: direita;
 }
@@ -161,7 +158,7 @@ int maximo(int esquerda, int direita){
 // Função que retorna a altura de determinado no da arvore
 int getAltura(Node * node){
 	if (!node)
-		return MINUS_ONE; 
+		return -ONE; 
 	node->height = maximo(getAltura(node->left), getAltura(node->right)) + ONE;
 	return node->height;
 }
@@ -175,10 +172,6 @@ Node * busca(Node * arvore, int chave){
 	} else 
 		return busca(arvore->right, chave);
 }
-
-/*void removerNo(Node * arvore, int chave){
-	// TODO
-}*/
 
 // Função que lista todos os nós da arvore em ordem crescente
 Node * listarCrescente(Node * raiz){
@@ -199,28 +192,45 @@ Node * listarDecrescente(Node * raiz){
 // Função que lista todos os nós da arvore em um determinado nível
 void mostrarNivel(int nivel, AVLtree * arvore){
 	Node * raiz = getRaiz(arvore);
-	if (raiz){
-		Queue * fila = defineQueue();	
+	Queue * fila = defineQueue();	
+	if (raiz && fila){
 		fila = push(fila, raiz);
-		for (register int iterator = ZERO; iterator < nivel; iterator++){
-				if (isEmpty(fila)) break;
+		register int iterator = ONE;
+		while (iterator <= nivel && !isEmpty(fila)){			
+			// Se o no da frente tem pelo menos um filho armazena na fila
+			if (front(fila)->left || front(fila)->right){
 				// Se existe filho a esquerda coloca na fila 
-				if (front(fila)->left) push(fila, front(fila)->left); 
+				if (front(fila)->left) fila = push(fila, front(fila)->left); 
 				// Se existe filho a direita coloca na fila 
-				if (front(fila)->right) push(fila, front(fila)->right); 
+				if (front(fila)->right) fila = push(fila, front(fila)->right); 
 				pop(fila); 
+			// Senão (o nó da frente da fila é uma folha) 
+			} else {
+				printf("se aparecer essa msg...");
+				// Retira-o 
+				pop(fila);
+				// Vá para o próximo da fila
+				continue;
+			}
+			printf("nao e pra aparecer essa msgs\n");
+			iterator++;
 		}
 		while(!isEmpty(fila)){
-			printf("%d \n", front(fila)->client.codigoCliente); 
+			printf("%d\n", front(fila)->client.codigoCliente); 
 			pop(fila);
 		}
 	}
+	clearQueue(fila); 
 } 
 
 Node * isTreeEmpty(AVLtree * arvore){
 	if (arvore->treeHeight == ZERO) 
 		return NULL;	
 	return arvore->root;
+}
+
+int alturaArvore (AVLtree * arvore){
+	return arvore->treeHeight;
 }
 
 Node * isRootDefined(AVLtree * arvore){
@@ -239,13 +249,8 @@ Node * rotacaoDireita(Node * x){
 	y->right = x;
 
 	//atualiza altura;
-
-	x->height = maximo(getAltura(x->left), getAltura(x->right))+1;
-	x->balanceFactor = getAltura(x->left) - getAltura(x->right);
-	y->height = maximo(getAltura(y->left), x->height)+1;
-	y->balanceFactor = getAltura(y->left) - getAltura(y->right);
-
-	//precido ver se atualiza fb.
+	x->height = getAltura(x);
+	y->height = getAltura(y);
 	return y;
 
 }
@@ -256,13 +261,8 @@ Node * rotacaoEsquerda(Node * x){
 	y->left = x;
 
 	//atualiza altura;
-
-	x->height = maximo(getAltura(x->right), getAltura(x->left))+1;
-	x->balanceFactor = getAltura(x->left) - getAltura(x->right);
-	y->height = maximo(getAltura(y->right), x->height)+1;
-	y->balanceFactor = getAltura(y->left) - getAltura(y->right);
-
-	//precido ver se atualiza fb.
+	x->height = getAltura(x);
+	y->height = getAltura(y);
 	return y;
 }
 
@@ -279,40 +279,56 @@ Node * rotacaoDireitaEsquerda(Node * x){
 Node * getMinimo(Node * x){
 	Node * y = x;
 	while(y->left != NULL){
-		y=y->left;
+		y = y->left;
 	}
 	return y;
 }
 
-Node * remocaoNo(Node * raiz, Client x){
-	if(raiz==NULL){
+// Tentativa de fazer um sucessor removendo da arvore com free() vi aqui (http://www.lcad.icmc.usp.br/~nonato/ED/AVL/algo-remocao.html) mas nesse site faz o inverso pega o maximo do no esquerdo (antecessor no caso) o do prof usa o sucessor 
+Node * sucessor(Node * raiz, Node * noChave){
+	Node * noRemovido; 
+	if (raiz->left){
+		raiz->left = sucessor(raiz->left, noChave);
+	}else{
+		noChave->client.codigoCliente = raiz->client.codigoCliente;
+		noRemovido = raiz;
+		raiz = raiz->left; 
+		if (raiz)
+			raiz->dad = noRemovido->dad; 
+		free(noRemovido);
+	}
+	return raiz;
+}
+
+// Função pra remover a porcaria de um nó (eu só troquei o nome e alterei uma coisinha que tava errada de resto ainda é seu código)
+Node * removerNo(Node * raiz, int x){
+	if(raiz == NULL){
 		return NULL;
 	}
-	if(x.codigoCliente < (raiz->client).codigoCliente){
-		raiz->left = remocaoNo(raiz->left, x);
+	if(x < (raiz->client).codigoCliente){
+		raiz->left = removerNo(raiz->left, x);
 	}
-	else if(x.codigoCliente > (raiz->client).codigoCliente){
-		raiz->right = remocaoNo(raiz->right, x);
+	else if(x > (raiz->client).codigoCliente){
+		raiz->right = removerNo(raiz->right, x);
 	}
 	else{
 		if(raiz->left == NULL){
-			raiz=raiz->right;
+			raiz = raiz->right;
 		}
 		else if(raiz->right == NULL){
-			raiz=raiz->left;
+			raiz = raiz->left;
 		}else{
-			Node * y = getMinimo(raiz->left);
+			Node * y = getMinimo(raiz->right);
 			raiz->client = y->client;
-			raiz->right = remocaoNo(raiz->right, y->client);
+			raiz->right = removerNo(raiz->right, y->client.codigoCliente);
 		}
 	}
-	if(raiz==NULL){
+	if(raiz == NULL){
 		return raiz;
 	}
-	raiz->height = maximo(getAltura(raiz->left), getAltura(raiz->right))+1;
-	raiz->balanceFactor = getAltura(raiz->left) - getAltura(raiz->right);
-	if(raiz->balanceFactor == 2 || raiz->balanceFactor == -2){
-		balanceamento(raiz);
+	raiz->height = getAltura(raiz);
+	if(abs(getBalanceFactor(raiz)) == UNBALANCED_TREE_MODULE){
+		raiz = balanceamento(raiz);
 	}
 	return raiz;
 }

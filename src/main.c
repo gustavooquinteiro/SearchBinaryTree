@@ -15,9 +15,10 @@ int main(){
 				buscaNo(arvoreAVL);
 			break;
 			case REMOVE:
-				//removeNo(raiz);
+				removeNo(arvoreAVL);
 			break;
 			case ORDER_LIST:
+				printf("entra");
 				listarNos(arvoreAVL);
 			break;
 			case LEVEL_LIST:
@@ -29,6 +30,7 @@ int main(){
 		}
 	}
 	//exibirRelatorio(); 
+	free(arvoreAVL);
 	exit(EXIT_SUCCESS);
 }
 
@@ -36,20 +38,20 @@ void insereNo(AVLtree * arvoreAVL){
 	int codigoCliente, valor, operacao;
 	scanf("%d %d %d", &codigoCliente, &operacao, &valor);
 	Node * novoNo = criarCliente(codigoCliente, operacao, valor);
-	definirRaiz(arvoreAVL, novoNo); 
+	arvoreAVL = definirRaiz(arvoreAVL, novoNo); 
 }
 
 void buscaNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf ("%d", &chave);
-	printf("%s %d\n", busca(getRaiz(arvoreAVL), chave)? FOUND_KEY: NOT_FOUND_KEY, chave);			
+	printf("%s %d\n", busca(getRaiz(arvoreAVL), chave)? FOUND_KEY_MESSAGE: NOT_FOUND_KEY_MESSAGE, chave);			
 }
 
-/*void removeNo(Node * raiz){
+void removeNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf("%d", &chave);
-	//removerNo(raiz, chave);
-}*/
+	free(removerNo(getRaiz(arvoreAVL), chave));
+}
 
 void listarNos(AVLtree * arvoreAVL){
 	char ordem; 
@@ -64,5 +66,5 @@ void listarNivel(AVLtree * arvoreAVL){
 }
 
 void mostrarAltura(AVLtree * arvoreAVL){
-	printf("%d\n", !getRaiz(arvoreAVL) ? ZERO: getAltura(getRaiz(arvoreAVL))+ONE);
+	printf("%d\n", alturaArvore(arvoreAVL));
 }
