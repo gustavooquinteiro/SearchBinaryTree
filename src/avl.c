@@ -232,3 +232,89 @@ Node * isRootDefined(AVLtree * arvore){
 Node * getRaiz(AVLtree * arvore){
 	return isRootDefined(arvore); 
 }
+
+Node * rotacaoDireita(Node * x){
+	Node * y = x->left;
+	x->left = y->right;
+	y->right = x;
+
+	//atualiza altura;
+
+	x->height = maximo(getAltura(x->left), getAltura(x->right))+1;
+	x->balanceFactor = getAltura(x->left) - getAltura(x->right);
+	y->height = maximo(getAltura(y->left), x->height)+1;
+	y->balanceFactor = getAltura(y->left) - getAltura(y->right);
+
+	//precido ver se atualiza fb.
+	return y;
+
+}
+
+Node * rotacaoEsquerda(Node * x){
+	Node * y = x->right;
+	x->right = y->left;
+	y->left = x;
+
+	//atualiza altura;
+
+	x->height = maximo(getAltura(x->right), getAltura(x->left))+1;
+	x->balanceFactor = getAltura(x->left) - getAltura(x->right);
+	y->height = maximo(getAltura(y->right), x->height)+1;
+	y->balanceFactor = getAltura(y->left) - getAltura(y->right);
+
+	//precido ver se atualiza fb.
+	return y;
+}
+
+Node * rotacaoEsquerdaDireita(Node * x){
+	x->left = rotacaoEsquerda(x->left);
+	return (rotacaoDireita(x));
+}
+
+Node * rotacaoDireitaEsquerda(Node * x){
+	x->right = rotacaoDireita(x->right);
+	return (rotacaoEsquerda(x));
+}
+
+Node * getMinimo(Node * x){
+	Node * y = x;
+	while(y->left != NULL){
+		y=y->left;
+	}
+	return y;
+}
+
+Node * remocaoNo(Node * raiz, Client x){
+	if(raiz==NULL){
+		return NULL;
+	}
+	if(x.codigoCliente < (raiz->client).codigoCliente){
+		raiz->left = remocaoNo(raiz->left, x);
+	}
+	else if(x.codigoCliente > (raiz->client).codigoCliente){
+		raiz->right = remocaoNo(raiz->right, x);
+	}
+	else{
+		if(raiz->left == NULL){
+			raiz=raiz->right;
+		}
+		else if(raiz->right == NULL){
+			raiz=raiz->left;
+		}else{
+			Node * y = getMinimo(raiz->left);
+			raiz->client = y->client;
+			raiz->right = remocaoNo(raiz->right, y->client);
+		}
+	}
+	if(raiz==NULL){
+		return raiz;
+	}
+	raiz->height = maximo(getAltura(raiz->left), getAltura(raiz->right))+1;
+	raiz->balanceFactor = getAltura(raiz->left) - getAltura(raiz->right);
+	if(raiz->balanceFactor == 2 || raiz->balanceFactor == -2){
+		balanceamento(raiz);
+	}
+	return raiz;
+}
+
+

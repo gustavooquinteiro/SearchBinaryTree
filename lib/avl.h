@@ -35,4 +35,11 @@ Node * isTreeEmpty(AVLtree * tree);
 AVLtree * isDefined(AVLtree * tree);
 Node * getRaiz(AVLtree * tree);
 Node * isRootDefined(AVLtree * tree);
+
+Node * rotacaoDireita(Node * x);
+Node * rotacaoEsquerda(Node * x);
+Node * rotacaoEsquerdaDireita(Node * x);
+Node * rotacaoDireitaEsquerda(Node * x);
+Node * remocaoNo(Node * raiz, Client x);
+Node * getMinimo(Node * x);
 #endif
