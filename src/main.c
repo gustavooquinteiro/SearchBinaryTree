@@ -28,7 +28,7 @@ int main(){
 			break;
 		}
 	}
-	//exibirRelatorio(); 
+	exibeRelatorio(arvoreAVL); 
 	free(arvoreAVL);
 	exit(EXIT_SUCCESS);
 }
@@ -66,4 +66,11 @@ void listarNivel(AVLtree * arvoreAVL){
 
 void mostrarAltura(AVLtree * arvoreAVL){
 	printf("%d\n", alturaArvore(arvoreAVL));
+}
+
+void exibeRelatorio(AVLtree * arvoreAVL){
+	printf("-+- Inicio relatorio -+-\n");
+	printf ("%d\n", getQuantidadeNos(arvoreAVL));
+	//remocoes consecutivas da raiz 
+	printf("-+- Fim relatorio -+-\n");
 }

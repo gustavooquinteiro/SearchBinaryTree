@@ -43,4 +43,5 @@ Node * removerNo(Node * raiz, int x);
 Node * getMinimo(Node * x);
 int getBalanceFactor(Node * no);
 int getNivel(Node * raiz);
+int getQuantidadeNos(AVLtree * arvore);
 #endif

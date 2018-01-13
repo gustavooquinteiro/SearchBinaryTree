@@ -20,6 +20,6 @@ void removeNo(AVLtree * tree);
 void listarNos(AVLtree * tree);
 void listarNivel(AVLtree * tree);
 void mostrarAltura(AVLtree * tree);
-
+void exibeRelatorio(AVLtree * tree);
 
 #endif
