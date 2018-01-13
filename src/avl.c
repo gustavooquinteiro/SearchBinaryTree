@@ -320,31 +320,44 @@ Node * sucessor(Node * raiz, Node * noChave){
 }
 
 // Função pra remover a porcaria de um nó (eu só troquei o nome e alterei uma coisinha que tava errada de resto ainda é seu código)
-Node * removerNo(Node * raiz, int x){
+Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
+	int validador_pai = 0;
+	if (x == raiz->client->codigoCliente){
+		validador_pai = 1;
+	}
 	if(raiz == NULL){
 		return NULL;
 	}
 	if(x < raiz->client->codigoCliente){
-		raiz->left = removerNo(raiz->left, x);
+		raiz->left = removerNo(raiz->left, x, arvoreAVL);
 	}
 	else if(x > raiz->client->codigoCliente){
-		raiz->right = removerNo(raiz->right, x);
+		raiz->right = removerNo(raiz->right, x, arvoreAVL);
 	}
 	else{
 		if(raiz->left == NULL){
 			raiz = raiz->right;
+			if(validador_pai){
+				arvoreAVL->root = raiz;
+				arvoreAVL->treeHeight = calculaAltura(arvoreAVL->root);
+				arvoreAVL->nodeQuantity-=1;
+			}
 		}
 		else if(raiz->right == NULL){
 			raiz = raiz->left;
+			if(validador_pai){
+				arvoreAVL->root = raiz;
+				arvoreAVL->treeHeight = calculaAltura(arvoreAVL->root);
+				arvoreAVL->nodeQuantity-=1;
+			}
 		}else{				
-			/* OLHA AQUI SUA FUDIDA
-			 * FACA ESSA VERIFICAÇÃO 
-			 * if (!raiz->dad) PRA VER SE raiz É a raiz da arvore toda
-			 * 	atualizaRaiz() se FOR atualize a raiz da arvore 
-			 *  */
 			Node * y = getMinimo(raiz->right);
 			raiz->client = y->client;
-			raiz->right = removerNo(raiz->right, y->client->codigoCliente);
+			arvoreAVL->root = y;
+			arvoreAVL->treeHeight = calculaAltura(arvoreAVL->root);
+			arvoreAVL->nodeQuantity-=1;
+			raiz->right = removerNo(raiz->right, y->client->codigoCliente, arvoreAVL);
+
 		}
 	}
 	if(raiz == NULL){

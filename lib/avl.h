@@ -36,7 +36,7 @@ Node * rotacaoDireita(Node * x);
 Node * rotacaoEsquerda(Node * x);
 Node * rotacaoEsquerdaDireita(Node * x);
 Node * rotacaoDireitaEsquerda(Node * x);
-Node * removerNo(Node * raiz, int x);
+Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL);
 Node * getMinimo(Node * x);
 int calculaBalanceFactor(Node * no);
 int calculaNivel(Node * raiz);

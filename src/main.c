@@ -49,8 +49,7 @@ void buscaNo(AVLtree * arvoreAVL){
 void removeNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf("%d", &chave);
-	if (removerNo(getRaiz(arvoreAVL), chave))
-		free(removerNo(getRaiz(arvoreAVL), chave));
+	free(removerNo(getRaiz(arvoreAVL), chave, arvoreAVL));
 }
 
 void listarNos(AVLtree * arvoreAVL){
