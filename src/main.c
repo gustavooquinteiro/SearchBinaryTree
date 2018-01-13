@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "../lib/avl.h"
 #include "../lib/main.h"
+#include "../lib/queue.h"
 
 int main(){
 	AVLtree * arvoreAVL = definirArvore();
@@ -29,7 +30,6 @@ int main(){
 		}
 	}
 	exibeRelatorio(arvoreAVL); 
-	free(arvoreAVL);
 	exit(EXIT_SUCCESS);
 }
 
@@ -49,28 +49,67 @@ void buscaNo(AVLtree * arvoreAVL){
 void removeNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf("%d", &chave);
-	free(removerNo(getRaiz(arvoreAVL), chave));
+	if (removerNo(getRaiz(arvoreAVL), chave))
+		free(removerNo(getRaiz(arvoreAVL), chave));
 }
 
 void listarNos(AVLtree * arvoreAVL){
 	char ordem; 
 	scanf(" %c", &ordem); 
-	ordem == DECRESCENT_ORDER? listarDecrescente(getRaiz(arvoreAVL)): listarCrescente(getRaiz(arvoreAVL));
+	(ordem == DECRESCENT_ORDER)? listarDecrescente(getRaiz(arvoreAVL)):listarCrescente(getRaiz(arvoreAVL));
+}
+
+// Função que lista todos os nós da arvore em ordem decrescente
+void listarDecrescente(Node * raiz){
+	if (raiz){
+		listarDecrescente(getRightSon(raiz));
+		printf("%lld %lld %lld\n", getClientCode(raiz), getClientOperationsQuantity(raiz), getClientValue(raiz));
+		listarDecrescente(getLeftSon(raiz));
+	}
+}
+
+// Função que lista todos os nós da arvore em ordem crescente
+void listarCrescente(Node * raiz){
+	if (raiz){
+		listarCrescente(getLeftSon(raiz));
+		printf("%lld %lld %lld\n", getClientCode(raiz), getClientOperationsQuantity(raiz), getClientValue(raiz));
+		listarCrescente(getRightSon(raiz));
+	}
 }
 
 void listarNivel(AVLtree * arvoreAVL){
 	int nivel;
 	scanf("%d", &nivel); 
-	mostrarNivel(nivel, arvoreAVL);	
+	Node * raiz = getRaiz(arvoreAVL);
+	Queue * fila = defineQueue();	
+	if (raiz && fila){
+		fila = push(fila, raiz); 
+		while (!isEmpty(fila) && getNivel(front(fila)) < nivel){
+
+			if (getLeftSon(front(fila)))
+				fila = push(fila, getLeftSon(front(fila))); 
+
+			if (getRightSon(front(fila))) 
+				fila = push(fila, getRightSon(front(fila))); 
+				
+			pop(fila);		
+		}
+		while(!isEmpty(fila)){
+			printf("%lld %lld %lld\n", getClientCode(front(fila)), getClientOperationsQuantity(front(fila)), getClientValue(front(fila))); 
+			pop(fila);
+		}
+	}
 }
 
 void mostrarAltura(AVLtree * arvoreAVL){
-	printf("%d\n", alturaArvore(arvoreAVL));
+	printf("%d\n", getAlturaArvore(arvoreAVL));
 }
 
 void exibeRelatorio(AVLtree * arvoreAVL){
 	printf("-+- Inicio relatorio -+-\n");
 	printf ("%d\n", getQuantidadeNos(arvoreAVL));
-	//remocoes consecutivas da raiz 
+	//enquanto arvore não vazia se vira aqui e faz 
+	// atualizarCliente(getRaiz(arvore))
+	// remover(getRaiz(arvore)) 
 	printf("-+- Fim relatorio -+-\n");
 }

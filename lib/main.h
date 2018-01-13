@@ -21,5 +21,8 @@ void listarNos(AVLtree * tree);
 void listarNivel(AVLtree * tree);
 void mostrarAltura(AVLtree * tree);
 void exibeRelatorio(AVLtree * tree);
+void listarCrescente(Node * raiz);
+void listarDecrescente(Node * raiz);
+
 
 #endif
