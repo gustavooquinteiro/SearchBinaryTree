@@ -24,11 +24,13 @@ typedef struct no{
 	struct no *left;
 	struct no *dad;
 	int height;
+	int level; 
 } Node;
 
 typedef struct tree{
 	Node * root;
 	int treeHeight;
+	int nodeQuantity; 
 } AVLtree; 
 
 AVLtree * definirArvore(){
@@ -42,12 +44,19 @@ AVLtree * definirArvore(){
 	
 	// Define arvore com altura 0, i.e arvore vazia
 	arvore->treeHeight = getAltura(arvore->root) + ONE;
+	arvore->nodeQuantity = ZERO; 
 	return arvore;
 }
 
 AVLtree * definirRaiz(AVLtree * arvore, Node * novoNo){
-	arvore->root = inserirNo(isTreeEmpty(arvore), novoNo); 
-	arvore->treeHeight = getAltura(arvore->root) + ONE;	
+	printf("INSERIR NO: %d\n", novoNo->client.codigoCliente);
+	
+	Node * raiz = isTreeEmpty(arvore);
+	printf("ATUAL RAIZ: %d\n", raiz ? raiz->client.codigoCliente: ZERO);
+	if (!busca(raiz, novoNo->client.codigoCliente))
+		arvore->nodeQuantity += ONE;
+	arvore->root = inserirNo(raiz, novoNo); 
+	arvore->treeHeight = getAltura(arvore->root) + ONE;		
 	return arvore;
 }
 
@@ -77,36 +86,38 @@ Node * criarNo(Client * novoCliente){
 		novoNo->right = NULL;
 		novoNo->left = NULL;
 		novoNo->dad = NULL;
+		novoNo->level = ZERO; 
 	}
 	return novoNo;
 }
 
 // Função que insere o nó na arvore 
 Node * inserirNo(Node * raiz, Node * noAtual){
-	if (!raiz){
-		printf("INSERINDO NO NUMA FOLHA\n");
+	if (!raiz){	
+		noAtual->level = getNivel(noAtual) + ONE;
 		return noAtual; 
 	}
 	if (noAtual->client.codigoCliente > raiz->client.codigoCliente){
-		printf("INSERINDO NO A DIREITA DA RAIZ\n");
 		raiz->right = inserirNo(raiz->right, noAtual);
-		raiz->right->dad = raiz;
+		if (!raiz->right->dad)
+			raiz->right->dad = raiz;
+		raiz->right->level = getNivel(raiz->right) + ONE;
 	}
-
 	if (noAtual->client.codigoCliente == raiz->client.codigoCliente)
 		raiz = atualizarCliente(noAtual, raiz);
 
 	if (noAtual->client.codigoCliente < raiz->client.codigoCliente){
-		printf("INSERINDO NO A ESQUERDA DA RAIZ\n");
 		raiz->left = inserirNo(raiz->left, noAtual);
-		raiz->left->dad = raiz;	
+		if (!raiz->left->dad)
+			raiz->left->dad = raiz;	
+		raiz->left->level = getNivel(raiz->left) + ONE;
 	}
-	raiz->height = getAltura(raiz);		
+	raiz->height = getAltura(raiz);	
+	raiz->level = getNivel(raiz) + ONE; 
 	//abs(int __x), da stdio.h, retorna valor absoluto, i.e, módulo do número 
-	if (abs(getBalanceFactor(raiz)) == UNBALANCED_TREE_MODULE){
-		printf("DESBALANCEOU \n");
-		raiz = balanceamento(raiz);			
-	}
+	if (abs(getBalanceFactor(raiz)) == TWO)
+		raiz = balanceamento(raiz);		
+	printf("NIVEL RETORNADO === %d para NO=== %d\n", raiz->level, raiz->client.codigoCliente); 
 	return raiz;
 }
 
@@ -159,8 +170,7 @@ int maximo(int esquerda, int direita){
 int getAltura(Node * node){
 	if (!node)
 		return -ONE; 
-	node->height = maximo(getAltura(node->left), getAltura(node->right)) + ONE;
-	return node->height;
+	return maximo(getAltura(node->left), getAltura(node->right)) + ONE;
 }
 
 // Função de busca da chave na arvore 
@@ -175,17 +185,21 @@ Node * busca(Node * arvore, int chave){
 
 // Função que lista todos os nós da arvore em ordem crescente
 Node * listarCrescente(Node * raiz){
-	if (!raiz->left) listarCrescente(raiz->left);
-	printf("%d\n %d\n %d\n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
-	if (!raiz->right) listarCrescente(raiz->right); 
+	if (raiz){
+		if (raiz->left) listarCrescente(raiz->left);
+		printf("%d\n %d\n %d\n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
+		if (raiz->right) listarCrescente(raiz->right); 
+	}
 	return raiz; 
 }
 
 // Função que lista todos os nós da arvore em ordem decrescente
 Node * listarDecrescente(Node * raiz){
-	if (!raiz->right) listarDecrescente(raiz->right); 
-	printf("%d \n %d\n %d\n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
-	if (!raiz->left) listarDecrescente(raiz->left);
+	if (raiz){
+		if (raiz->right) listarDecrescente(raiz->right); 
+		printf("%d \n %d\n %d\n", raiz->client.codigoCliente, raiz->client.quantidadeOperacoes, raiz->client.saldo);
+		if (raiz->left) listarDecrescente(raiz->left);
+	}
 	return raiz;
 }
 
@@ -194,26 +208,22 @@ void mostrarNivel(int nivel, AVLtree * arvore){
 	Node * raiz = getRaiz(arvore);
 	Queue * fila = defineQueue();	
 	if (raiz && fila){
-		fila = push(fila, raiz);
-		register int iterator = ONE;
-		while (iterator <= nivel && !isEmpty(fila)){			
-			// Se o no da frente tem pelo menos um filho armazena na fila
-			if (front(fila)->left || front(fila)->right){
-				// Se existe filho a esquerda coloca na fila 
-				if (front(fila)->left) fila = push(fila, front(fila)->left); 
-				// Se existe filho a direita coloca na fila 
-				if (front(fila)->right) fila = push(fila, front(fila)->right); 
-				pop(fila); 
-			// Senão (o nó da frente da fila é uma folha) 
-			} else {
-				printf("se aparecer essa msg...");
-				// Retira-o 
-				pop(fila);
-				// Vá para o próximo da fila
-				continue;
+		fila = push(fila, raiz); 
+		printf("NIVEL DO NO DA FRENTE DA FILA === %d E NIVEL QUE EU QUERO == %d\n", front(fila)->level, nivel);
+		while (!isEmpty(fila) && (front(fila)->level < nivel || front(fila)->level != back(fila)->level)){
+			// Se existe filho a esquerda coloca na fila 
+			if (front(fila)->left){ 
+				printf("TEM FILHO A ESQUERDA ADICIONA NA FILA: %d DE NIVEL == %d\n", front(fila)->left->client.codigoCliente, front(fila)->left->level);
+				fila = push(fila, front(fila)->left); 
 			}
-			printf("nao e pra aparecer essa msgs\n");
-			iterator++;
+			// Se existe filho a direita coloca na fila 
+			if (front(fila)->right){ 
+				printf("TEM FILHO A DIREITA ADICIONA NA FILA == %d DE NIVEL == %d\n", front(fila)->right->client.codigoCliente, front(fila)->right->level);
+				fila = push(fila, front(fila)->right); 
+			}
+			printf("RETIRA DA FRENTE == %d\n", front(fila)->client.codigoCliente);
+			pop(fila);		
+			printf("AGORA A FRENTE É == %d de NIVEL === %d\n", front(fila)->client.codigoCliente, front(fila)->level);
 		}
 		while(!isEmpty(fila)){
 			printf("%d\n", front(fila)->client.codigoCliente); 
@@ -243,14 +253,22 @@ Node * getRaiz(AVLtree * arvore){
 	return isRootDefined(arvore); 
 }
 
+int getNivel(Node * raiz){
+	if (!raiz)
+		return -ONE; 
+	return getNivel(raiz->dad) + ONE; 
+}
+
 Node * rotacaoDireita(Node * x){
 	Node * y = x->left;
 	x->left = y->right;
 	y->right = x;
 
-	//atualiza altura;
+	//atualiza altura e nivel;
 	x->height = getAltura(x);
+	x->level = getNivel(x) + ONE;
 	y->height = getAltura(y);
+	y->level = getNivel(y) + ONE;
 	return y;
 
 }
@@ -260,9 +278,11 @@ Node * rotacaoEsquerda(Node * x){
 	x->right = y->left;
 	y->left = x;
 
-	//atualiza altura;
+	//atualiza altura e nivel;
 	x->height = getAltura(x);
+	x->level = getNivel(x) + ONE;
 	y->height = getAltura(y);
+	y->level = getNivel(y) + ONE;
 	return y;
 }
 
@@ -327,9 +347,10 @@ Node * removerNo(Node * raiz, int x){
 		return raiz;
 	}
 	raiz->height = getAltura(raiz);
-	if(abs(getBalanceFactor(raiz)) == UNBALANCED_TREE_MODULE){
+	if(abs(getBalanceFactor(raiz)) == TWO){
 		raiz = balanceamento(raiz);
 	}
+	raiz->level = getNivel(raiz) + ONE; 
 	return raiz;
 }
 

@@ -6,7 +6,7 @@
 #define ONE 1
 
 // Definir constantes de fatores de balanceamentos da árvore
-#define UNBALANCED_TREE_MODULE 2
+#define TWO 2
 
 #define UNBALANCED_TREE_LEFT -2
 
@@ -42,4 +42,5 @@ Node * rotacaoDireitaEsquerda(Node * x);
 Node * removerNo(Node * raiz, int x);
 Node * getMinimo(Node * x);
 int getBalanceFactor(Node * no);
+int getNivel(Node * raiz);
 #endif

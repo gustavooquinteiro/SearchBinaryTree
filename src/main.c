@@ -18,7 +18,6 @@ int main(){
 				removeNo(arvoreAVL);
 			break;
 			case ORDER_LIST:
-				printf("entra");
 				listarNos(arvoreAVL);
 			break;
 			case LEVEL_LIST:
@@ -55,7 +54,7 @@ void removeNo(AVLtree * arvoreAVL){
 
 void listarNos(AVLtree * arvoreAVL){
 	char ordem; 
-	scanf("%c", &ordem); 
+	scanf(" %c", &ordem); 
 	ordem == DECRESCENT_ORDER? listarDecrescente(getRaiz(arvoreAVL)): listarCrescente(getRaiz(arvoreAVL));
 }
 

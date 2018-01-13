@@ -17,6 +17,7 @@ typedef struct no{
 	struct tree *left;
 	struct tree *dad;
 	int height;
+	int level;
 } Node;
 
 typedef struct queue{
@@ -24,6 +25,7 @@ typedef struct queue{
 	struct queue * next;
 	struct queue * begin;
 	struct queue * end;
+	int size;
 } Queue; 
 
 Queue * defineQueue(){
@@ -35,6 +37,7 @@ Queue * defineQueue(){
 		queue->begin = NULL;
 		queue->end = NULL;
 		queue->next = NULL;
+		queue->size = ZERO;
 		return queue;
 	}
 }
@@ -49,9 +52,9 @@ Queue * push(Queue * queue, Node * newNode){
 		new->next = NULL;
 		if (isEmpty(queue)){
 			queue->begin = new;
-		} else{
+		} else
 			queue->end->next = new;
-		}
+		queue->size += ONE;
 		queue->end = new;
 	}
 	return queue; 
@@ -65,6 +68,7 @@ void pop(Queue * queue){
 		aux = queue->begin;
 		queue->begin = aux->next; 		 
 	}
+	queue->size -= ONE;
 	free(aux);
 }
 	
@@ -74,6 +78,14 @@ int isEmpty(Queue *queue){
 
 Node * front (Queue * queue){
 	return !isEmpty(queue)? queue->begin->node: NULL; 
+}
+
+Node * back (Queue * queue){
+	return !isEmpty(queue)? queue->end->node: NULL;  
+}
+
+int size(Queue * queue){
+	return queue->size;
 }
 
 void clearQueue(Queue * queue){
