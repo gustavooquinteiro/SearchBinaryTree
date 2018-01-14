@@ -48,4 +48,11 @@ void atualizaQuantidadeNo(AVLtree * arvore);
 Client * getClient(Node * no);
 void atualizaArvore(AVLtree * arvore);
 int calculaQuantidadeNos(Node * raiz);
+
+
+// TESTANDO ESSA MERDA
+Node * rotacaoesquerda(Node * x);
+Node * rotacaodireita(Node * x);
+Node * rotacaoduplaesquerda(Node * x);
+Node * rotacaodupladireita(Node * x);
 #endif

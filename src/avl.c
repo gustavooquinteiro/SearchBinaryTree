@@ -89,15 +89,15 @@ Node * balanceamento(Node * x){
 	if (calculaAltura(x->right) - calculaAltura(x->left) == UNBALANCED_TREE_LEFT){
 		Node * y = x->left;
 		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_RIGHT){
-			x = rotacaoDuplaDireita(x);
+			x = rotacaodupladireita(x);
 		}else
-			x = rotacaoDireita(x);
+			x = rotacaodireita(x);
 	} else{
 		Node * y = x->right;
 		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_LEFT){
-			x = rotacaoDuplaEsquerda(x);
+			x = rotacaoduplaesquerda(x);
 		}else
-			x = rotacaoEsquerda(x);
+			x = rotacaoesquerda(x);
 	}
 	return x;
 }
@@ -302,3 +302,35 @@ void atualizaArvore(AVLtree * arvore){
 
 }
 
+Node * rotacaoesquerda(Node * x){
+	Node * y = x->right;
+	x->right = y->left;
+	y->left = x; 
+	x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
+	y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
+	return y;
+}
+
+Node * rotacaodireita(Node * x){
+	Node * y = x->left;
+	x->left = y->right;
+	y->right = x;
+	x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
+	y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
+	return y;
+	
+}
+
+Node * rotacaoduplaesquerda(Node * x){
+	Node * y= x->right;
+	y = rotacaodireita(y);
+	x = rotacaoesquerda(x);
+	return x;
+}
+
+Node * rotacaodupladireita(Node * x){
+	Node * y = x->left;
+	y = rotacaoesquerda(y);
+	x = rotacaodireita(x);
+	return x;
+}
