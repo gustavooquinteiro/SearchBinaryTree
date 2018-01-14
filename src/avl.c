@@ -278,10 +278,16 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 	return raiz;
 }
 
+int calculaQuantidadeNos(Node * raiz){
+	if(!raiz) return 0;
+	else if(((raiz->left) == (raiz->right)) && raiz->left == NULL) return 1;
+	return calculaQuantidadeNos(raiz->left) + calculaQuantidadeNos(raiz->right) + 1;
+}
+
 void atualizaArvore(AVLtree * arvore){
 	if(arvore->root!=NULL){
 		arvore->treeHeight = calculaAltura(arvore->root) + 1;
-		arvore->nodeQuantity = calculaNivel(arvore->root) + 1;
+		arvore->nodeQuantity =calculaQuantidadeNos(arvore->root);
 	}else{
 		arvore->treeHeight = 0;
 		arvore->nodeQuantity =0;

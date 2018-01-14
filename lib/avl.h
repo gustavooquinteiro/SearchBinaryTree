@@ -45,4 +45,5 @@ int getNivel(Node *  no);
 void atualizaQuantidadeNo(AVLtree * arvore);
 Client * getClient(Node * no);
 void atualizaArvore(AVLtree * arvore);
+int calculaQuantidadeNos(Node * raiz);
 #endif
