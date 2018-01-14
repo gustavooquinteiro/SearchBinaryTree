@@ -1,9 +1,12 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+// Definição de constantes para legibilizar código
 #define ZERO 0
 #define ONE 1
+#define MALLOC_ERROR "Dynamic allocation failed"
 
+// Assinaturas das funções e structs
 typedef struct cliente Client;
 
 Client * criarCliente (int codigoCliente, int operacao, int valor);

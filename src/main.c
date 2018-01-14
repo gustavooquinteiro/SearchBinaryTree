@@ -5,6 +5,10 @@
 #include "../lib/main.h"
 #include "../lib/queue.h"
 
+/* Trabalho de Estrutura de Dados e Algoritmos I - MATA40
+ * Desenvolvido por Fábio Lopes Gomes e Gustavo Oliveira Quinteiro 
+ * Maiores detalhes do desenvolvimento vide https://github.com/gustavooquinteiro/SearchBinaryTree */
+
 int main(){
 	AVLtree * arvoreAVL = definirArvore();
 	char opcao;
@@ -34,6 +38,7 @@ int main(){
 	exit(EXIT_SUCCESS);
 }
 
+// Função que insere um nó com um cliente na árvore 
 void insereNo(AVLtree * arvoreAVL){
 	int codigoCliente, valor, operacao;
 	scanf("%d %d %d", &codigoCliente, &operacao, &valor);
@@ -41,12 +46,14 @@ void insereNo(AVLtree * arvoreAVL){
 	arvoreAVL = definirRaiz(arvoreAVL, novoNo); 
 }
 
+// Função que busca determinada chave na árvore e mostra na tela mensagem informativa
 void buscaNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf ("%d", &chave);
 	printf("%s %d\n", busca(getRaiz(arvoreAVL), chave)? FOUND_KEY_MESSAGE: NOT_FOUND_KEY_MESSAGE, chave);			
 }
 
+// Função que remove determinada chave da árvore, se essa chave existir
 void removeNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf("%d", &chave);
@@ -55,6 +62,7 @@ void removeNo(AVLtree * arvoreAVL){
 	//free(teste);
 }
 
+// Função que lista os nós segundo ordem inserida
 void listarNos(AVLtree * arvoreAVL){
 	char ordem; 
 	scanf(" %c", &ordem); 
@@ -79,6 +87,7 @@ void listarCrescente(Node * raiz){
 	}
 }
 
+// Função que lista determinado nível da árvore, se nível existente 
 void listarNivel(AVLtree * arvoreAVL){
 	int nivel;
 	scanf("%d", &nivel); 
@@ -101,12 +110,15 @@ void listarNivel(AVLtree * arvoreAVL){
 			pop(fila);
 		}
 	}
+	clearQueue(fila);
 }
 
+// Função que mostra a altura da arvore 
 void mostrarAltura(AVLtree * arvoreAVL){
 	printf("%d\n", getAlturaArvore(arvoreAVL));
 }
 
+// Função que exibe o relatorio final segundo a ordem de remoção da raiz 
 void exibeRelatorio(AVLtree * arvoreAVL){
 	atualizaArvore(arvoreAVL);
 	printf("-+- Inicio relatorio -+-\n");

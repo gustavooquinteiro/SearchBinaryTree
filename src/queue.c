@@ -1,25 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../lib/queue.h"
+#include "../lib/avl.h"
 
-// Declaração das structs
-typedef struct cliente{
-	int codigoCliente;
-	int operacao;
-	int valor;
-	int saldo;
-	int quantidadeOperacoes; 
-} Client;
-
-typedef struct no{
-	Client * client;
-	struct tree *right;
-	struct tree *left;
-	struct tree *dad;
-	int height;
-	int level;
-} Node;
-
+// Declaração da struct
 typedef struct queue{
 	Node * node; 	
 	struct queue * next;
@@ -28,10 +12,12 @@ typedef struct queue{
 	int size;
 } Queue; 
 
+/* Função que aloca na memoria uma queue
+ * Caso não consiga alocar, lança erro de alocação na saída padrão e termina o programa */
 Queue * defineQueue(){
 	Queue * queue = (Queue *)malloc(sizeof(Queue));
 	if (!queue){
-		perror(ERROR);
+		perror(MALLOC_ERROR);
 		exit(EXIT_FAILURE); 
 	} else{
 		queue->begin = NULL;
@@ -42,10 +28,11 @@ Queue * defineQueue(){
 	}
 }
 
+// Função que insere um novo elemento na queue.
 Queue * push(Queue * queue, Node * newNode){
 	Queue * new = (Queue *)malloc(sizeof(Queue)); 
 	if (!new){
-		perror(ERROR); 
+		perror(MALLOC_ERROR); 
 		exit(EXIT_FAILURE);
 	} else{
 		new->node = newNode; 
@@ -60,6 +47,7 @@ Queue * push(Queue * queue, Node * newNode){
 	return queue; 
 }
 
+// Função que remove o elemento da frente da queue, caso ela não esteja vazia. Caso a queue estiver vazia, desaloca-a da memória 
 void pop(Queue * queue){
 	Queue *aux;
 	if (isEmpty(queue)){
@@ -71,23 +59,28 @@ void pop(Queue * queue){
 	queue->size -= ONE;
 	free(aux);
 }
-	
+
+// Função que verifica se a queue está vazia
 int isEmpty(Queue *queue){
 	return (queue->begin == NULL); 
 }
 
+// Função que retorna o elemento da frente da queue
 Node * front (Queue * queue){
 	return !isEmpty(queue)? queue->begin->node: NULL; 
 }
 
+// Função que retorna o elemento do fim da queue
 Node * back (Queue * queue){
 	return !isEmpty(queue)? queue->end->node: NULL;  
 }
 
+// Função que retorna o tamanho da queue
 int size(Queue * queue){
 	return queue->size;
 }
 
+// Função que desaloca a queue da memória
 void clearQueue(Queue * queue){
 	if (queue)
 		free(queue); 

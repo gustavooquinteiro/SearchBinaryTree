@@ -1,13 +1,13 @@
 #ifndef FILA_H
 #define FILA_H
 
+// Definição de constantes para legibilizar código
 #define ZERO 0
 #define ONE 1
-#define ERROR "Dynamic allocation failed"
+#define MALLOC_ERROR "Dynamic allocation failed"
 
+// Assinaturas das funções e struct
 typedef struct queue Queue;
-typedef struct no Node;
-typedef struct cliente Client;
 
 Queue * defineQueue();
 Queue * push(Queue * queue, Node * newNode);

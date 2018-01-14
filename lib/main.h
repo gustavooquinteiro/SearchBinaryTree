@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+// Definição de constantes para legibilizar código
 #define END 'f'
 #define INSERT 'i'
 #define SEARCH 'c'
@@ -14,6 +15,7 @@
 #define FOUND_KEY_MESSAGE "existe no com chave:"
 #define NOT_FOUND_KEY_MESSAGE "nao existe no com chave:"
 
+// Assinaturas das funções
 void insereNo(AVLtree * tree);
 void buscaNo(AVLtree * tree);
 void removeNo(AVLtree * tree);

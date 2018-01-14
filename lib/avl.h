@@ -13,7 +13,8 @@
 #define BALANCED_TREE_LEFT -1
 #define BALANCED_TREE_RIGHT 1
 
-typedef struct cliente Client; 
+// Assinaturas das funções e structs
+
 typedef struct no Node; 
 typedef struct tree AVLtree;
 
