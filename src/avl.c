@@ -3,14 +3,6 @@
 #include "../lib/avl.h"
 #include "../lib/client.h"
 #include "../lib/queue.h"
-
-/* DE UMA OLHADA NO MATERIAL Q O PROF DISPONIBILIZOU NO CLASSROOM PQ LA TEM OS ALGORITMOS E TBM NO DESCRITIVO DO TRABALHO
- * OUTRA OBS IMPORTANTE: PARENTE NÃO QUER VARIAVEIS GLOBAIS ENTAO TEMOS QUE TRABALHAR COM VARIAVEIS LOCAIS E PASSA-LA POR REFERENCIA DE PONTEIRO 
- * O Q FALTA: 
- * Remoção de nó (OBS MT IMPORTANTE: Usar free(noAserRemovido) para desalocar da memoria perdemos pontos no trabalho passado pq nao usamos esse free) ESSA MERDAA
- * Mostrar por nivel (TA MEIO FEITO ESSA MERDA)
- * Exibir relatorio pela ordem de remoção da raiz CUU 
- * */
  
 // Declaração das structs
 typedef struct no{
@@ -94,18 +86,20 @@ Node * inserirNo(Node * raiz, AVLtree * arvore, Node * noAtual){
 
 // Função que faz o balanceamento da arvore
 Node * balanceamento(Node * x){
-	if (calculaBalanceFactor(x) == UNBALANCED_TREE_LEFT){
-		if (calculaBalanceFactor(getLeftSon(x)) == BALANCED_TREE_RIGHT){
+	if (calculaAltura(x->right) - calculaAltura(x->left) == UNBALANCED_TREE_LEFT){
+		Node * y = x->left;
+		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_RIGHT){
 			x = rotacaoDuplaDireita(x);
 		}else
 			x = rotacaoDireita(x);
 	} else{
-		if (calculaBalanceFactor(getRightSon(x)) == BALANCED_TREE_LEFT){
+		Node * y = x->right;
+		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_LEFT){
 			x = rotacaoDuplaEsquerda(x);
 		}else
 			x = rotacaoEsquerda(x);
 	}
-	return x; 
+	return x;
 }
 
 /* Função que calcula o fator de balanceamento de um nó

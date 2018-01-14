@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/queue.h"
 #include "../lib/avl.h"
+#include "../lib/queue.h"
+
 
 // Declaração da struct
 typedef struct queue{
