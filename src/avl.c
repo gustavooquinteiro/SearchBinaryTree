@@ -80,27 +80,27 @@ Node * inserirNo(Node * raiz, AVLtree * arvore, Node * noAtual){
 	raiz->height = maximo(calculaAltura(getLeftSon(raiz)), calculaAltura(getRightSon(raiz))) + ONE;	
 	//abs(int __x), da stdio.h, retorna valor absoluto, i.e, módulo do número 
 	if(abs(calculaAltura(raiz->right) - calculaAltura(raiz->left)) == TWO)
-		raiz = balanceamento(raiz);		
+		raiz = balancea(raiz);		
 	return raiz;
 }
 
-// Função que faz o balanceamento da arvore
-Node * balanceamento(Node * x){
-	if (calculaAltura(x->right) - calculaAltura(x->left) == UNBALANCED_TREE_LEFT){
-		Node * y = x->left;
-		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_RIGHT){
-			x = rotacaodupladireita(x);
-		}else
+// Função que faz o balanceamento da arvore ESSA MERDA AQUO Q EU FIZ LITERALMENTE LINHA POR LINHA DAQUELA MERDA DE ALGORITMO
+Node * balancea(Node * x){
+	if (calculaAltura(x->right) - calculaAltura(x->left) == -2){
+		Node * y = x->left; 
+		if (calculaAltura(y->right) - calculaAltura(y->left) == 1){
+			x= rotacaodupladireita(x);
+		} else
 			x = rotacaodireita(x);
-	} else{
+	} else if (calculaAltura(x->right) - calculaAltura(x->left) == 2){
 		Node * y = x->right;
-		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_LEFT){
+		if (calculaAltura(y->right) - calculaAltura(y->left) == -1){
 			x = rotacaoduplaesquerda(x);
-		}else
+		} else
 			x = rotacaoesquerda(x);
 	}
 	return x;
-}
+}	
 
 /* Função que calcula o fator de balanceamento de um nó
  * Fator de balanceamento utilizado = altura da direita - altura da esquerda */
@@ -173,62 +173,6 @@ int getQuantidadeNos(AVLtree * arvore){
 	return arvore->nodeQuantity;
 }
 
-// Função que realiza a rotação a direita de um nó e atualiza sua altura
-Node * rotacaoDireita(Node * x){
-	Node * y = x->left;
-	if (x->dad){
-		if (x->dad->left == x){
-			x->dad->left = y;
-		} else{
-			x->dad->right = y;
-		}
-	}
-	y->dad = x->dad;
-	x->left = y->right;
-	if (x->left) 
-		x->left->dad = x; 
-	y->right = x;
-	x->dad = y;
-
-	x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
-	y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
-	return y;
-}
-
-// Função que realiza a rotação a esquerda de um nó e atualiza sua altura
-Node * rotacaoEsquerda(Node * x){
-	Node * y = x->right;
-	if (x->dad){
-		if (x->dad->left == x){
-			x->dad->left = y;
-		} else{
-			x->dad->right = y;
-		}
-	}
-	y->dad = x->dad;
-	x->right = y->left;
-	if (x->right)
-		x->right->dad = x;
-	y->left = x;
-	x->dad = y;
-
-	x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
-	y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
-	return y;
-}
-
-// Função que realiza a rotação dupla a direita de um nó
-Node * rotacaoDuplaDireita(Node * x){
-	x->left = rotacaoEsquerda(x->left);
-	return rotacaoDireita(x);
-}
-
-// Função que realiza a rotação dupla a esquerda de um nó
-Node * rotacaoDuplaEsquerda(Node * x){
-	x->right = rotacaoDireita(x->right);
-	return rotacaoEsquerda(x);
-}
-
 // Função que retorna o mínimo valor de um nó
 Node * getMinimo(Node * x){
 	Node * y = x;
@@ -278,7 +222,7 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 		}
 		raiz->height = maximo(calculaAltura(raiz->left), calculaAltura(raiz->right)) + ONE;
 		if(abs(calculaAltura(raiz->right) - calculaAltura(raiz->left)) == TWO){
-			raiz = balanceamento(raiz);
+			raiz = balancea(raiz);
 		}
 	return raiz;
 }
@@ -302,6 +246,7 @@ void atualizaArvore(AVLtree * arvore){
 
 }
 
+// NOVAS FUNCOES DE REMOCAO AQUI BUCETA
 Node * rotacaoesquerda(Node * x){
 	Node * y = x->right;
 	x->right = y->left;

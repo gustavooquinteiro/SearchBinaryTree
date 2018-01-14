@@ -3,7 +3,6 @@
 #include "../lib/avl.h"
 #include "../lib/queue.h"
 
-
 // Declaração da struct
 typedef struct queue{
 	Node * node; 	

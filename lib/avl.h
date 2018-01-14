@@ -23,7 +23,6 @@ AVLtree * definirRaiz(AVLtree * arvore, Node * node);
 AVLtree * definirArvore();
 Node * criarNo(Client * novoCliente);
 Node * inserirNo(Node * raiz, AVLtree * arvore, Node * actualNode);
-Node * balanceamento(Node * arvore);
 Node * busca(Node * arvore, int chave);
 int maximo(int left, int right);
 int calculaAltura(Node * arvore);
@@ -50,7 +49,9 @@ void atualizaArvore(AVLtree * arvore);
 int calculaQuantidadeNos(Node * raiz);
 
 
-// TESTANDO ESSA MERDA
+// TESTANDO ESSA MERDA NOVAS FUNCAO OPORA
+Node * balancea(Node * x);	
+Node * novobalaceamento(Node * x);
 Node * rotacaoesquerda(Node * x);
 Node * rotacaodireita(Node * x);
 Node * rotacaoduplaesquerda(Node * x);
