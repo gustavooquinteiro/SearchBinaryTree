@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../lib/avl.h"
+#include "../lib/client.h"
 #include "../lib/main.h"
 #include "../lib/queue.h"
 
@@ -36,7 +37,7 @@ int main(){
 void insereNo(AVLtree * arvoreAVL){
 	int codigoCliente, valor, operacao;
 	scanf("%d %d %d", &codigoCliente, &operacao, &valor);
-	Node * novoNo = criarCliente(codigoCliente, operacao, valor);
+	Node * novoNo = criarNo(criarCliente(codigoCliente, operacao, valor));
 	arvoreAVL = definirRaiz(arvoreAVL, novoNo); 
 }
 
@@ -63,7 +64,7 @@ void listarNos(AVLtree * arvoreAVL){
 void listarDecrescente(Node * raiz){
 	if (raiz){
 		listarDecrescente(getRightSon(raiz));
-		printf("%lld %lld %lld\n", getClientCode(raiz), getClientOperationsQuantity(raiz), getClientValue(raiz));
+		printf("%lld %lld %lld\n", getClientCode(getClient(raiz)), getClientOperationsQuantity(getClient(raiz)), getSaldoCliente(getClient(raiz)));
 		listarDecrescente(getLeftSon(raiz));
 	}
 }
@@ -72,7 +73,7 @@ void listarDecrescente(Node * raiz){
 void listarCrescente(Node * raiz){
 	if (raiz){
 		listarCrescente(getLeftSon(raiz));
-		printf("%lld %lld %lld\n", getClientCode(raiz), getClientOperationsQuantity(raiz), getClientValue(raiz));
+		printf("%lld %lld %lld\n", getClientCode(getClient(raiz)), getClientOperationsQuantity(getClient(raiz)), getSaldoCliente(getClient(raiz)));
 		listarCrescente(getRightSon(raiz));
 	}
 }
@@ -84,7 +85,7 @@ void listarNivel(AVLtree * arvoreAVL){
 	Queue * fila = defineQueue();	
 	if (raiz && fila){
 		fila = push(fila, raiz); 
-		while (!isEmpty(fila) && getNivel(front(fila)) < nivel){
+		while (!isEmpty(fila) && calculaNivel(front(fila)) < nivel){
 
 			if (getLeftSon(front(fila)))
 				fila = push(fila, getLeftSon(front(fila))); 
@@ -95,7 +96,7 @@ void listarNivel(AVLtree * arvoreAVL){
 			pop(fila);		
 		}
 		while(!isEmpty(fila)){
-			printf("%lld %lld %lld\n", getClientCode(front(fila)), getClientOperationsQuantity(front(fila)), getClientValue(front(fila))); 
+			printf("%lld\n", getClientCode(getClient(front(fila)))); 
 			pop(fila);
 		}
 	}
