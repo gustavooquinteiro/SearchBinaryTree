@@ -220,7 +220,7 @@ Node * rotacaoEsquerda(Node * x){
 
 Node * rotacaoDuplaDireita(Node * x){
 	x->left = rotacaoEsquerda(x->left);
-	return rotacaoDireita(x);;
+	return rotacaoDireita(x);
 }
 
 Node * rotacaoDuplaEsquerda(Node * x){
@@ -251,6 +251,8 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 				if(raiz == arvoreAVL->root){
 					arvoreAVL->root = raiz->right;
 				}
+				if(raiz->right != NULL)
+					raiz->right->dad = raiz->dad;
 				raiz = raiz->right;
 				
 			}
@@ -258,11 +260,14 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 				if(raiz == arvoreAVL->root){
 					arvoreAVL->root = raiz->left;
 				}
+				if(raiz->left != NULL){
+					raiz->left->dad =raiz->dad;
+				}
 				raiz = raiz->left;
 
 			}else{				
 				Node * y = getMinimo(raiz->right);
-				raiz->client = y->client;
+				raiz->client=y->client;
 				raiz->right = removerNo(raiz->right, getClientCode(y->client), arvoreAVL);
 
 			}
