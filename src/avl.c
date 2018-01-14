@@ -79,7 +79,7 @@ Node * inserirNo(Node * raiz, AVLtree * arvore, Node * noAtual){
 	}
 	raiz->height = maximo(calculaAltura(getLeftSon(raiz)), calculaAltura(getRightSon(raiz))) + ONE;	
 	//abs(int __x), da stdio.h, retorna valor absoluto, i.e, módulo do número 
-	if (abs(calculaBalanceFactor(raiz)) == TWO)
+	if(abs(calculaAltura(raiz->right) - calculaAltura(raiz->left)) == TWO)
 		raiz = balanceamento(raiz);		
 	return raiz;
 }
@@ -277,10 +277,9 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 			return raiz;
 		}
 		raiz->height = maximo(calculaAltura(raiz->left), calculaAltura(raiz->right)) + ONE;
-		if(abs(calculaBalanceFactor(raiz)) == TWO){
+		if(abs(calculaAltura(raiz->right) - calculaAltura(raiz->left)) == TWO){
 			raiz = balanceamento(raiz);
 		}
-
 	return raiz;
 }
 
