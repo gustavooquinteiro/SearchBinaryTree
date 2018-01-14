@@ -321,42 +321,32 @@ Node * sucessor(Node * raiz, Node * noChave){
 
 // Função pra remover a porcaria de um nó (eu só troquei o nome e alterei uma coisinha que tava errada de resto ainda é seu código)
 Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
-	if(raiz != NULL){
-		int validador_pai = 0;
-		if (x == raiz->client->codigoCliente){
-			validador_pai = 1;
-		}
 		if(raiz == NULL){
 			return NULL;
 		}
-		if(x < raiz->client->codigoCliente){
+		if(x < (raiz->client->codigoCliente)){
 			raiz->left = removerNo(raiz->left, x, arvoreAVL);
 		}
-		else if(x > raiz->client->codigoCliente){
+		else if(x > (raiz->client->codigoCliente)){
 			raiz->right = removerNo(raiz->right, x, arvoreAVL);
 		}
 		else{
 			if(raiz->left == NULL){
-				raiz = raiz->right;
-				if(validador_pai){
-					arvoreAVL->root = raiz;
-					arvoreAVL->treeHeight = calculaAltura(arvoreAVL->root);
-					arvoreAVL->nodeQuantity-=1;
+				if(raiz == arvoreAVL->root){
+					arvoreAVL->root = raiz->right;
 				}
+				raiz = raiz->right;
+				
 			}
 			else if(raiz->right == NULL){
-				raiz = raiz->left;
-				if(validador_pai){
-					arvoreAVL->root = raiz;
-					arvoreAVL->treeHeight = calculaAltura(arvoreAVL->root);
-					arvoreAVL->nodeQuantity-=1;
+				if(raiz == arvoreAVL->root){
+					arvoreAVL->root = raiz->left;
 				}
+				raiz = raiz->left;
+
 			}else{				
 				Node * y = getMinimo(raiz->right);
 				raiz->client = y->client;
-				arvoreAVL->root = y;
-				arvoreAVL->treeHeight = calculaAltura(arvoreAVL->root);
-				arvoreAVL->nodeQuantity-=1;
 				raiz->right = removerNo(raiz->right, y->client->codigoCliente, arvoreAVL);
 
 			}
@@ -368,10 +358,8 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 		if(abs(calculaBalanceFactor(raiz)) == TWO){
 			raiz = balanceamento(raiz);
 		}
+
 		return raiz;
-	}else{
-		return NULL;
-	}
 }
 
 
