@@ -51,6 +51,7 @@ void removeNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf("%d", &chave);
 	removerNo(getRaiz(arvoreAVL), chave, arvoreAVL);
+	atualizaArvore(arvoreAVL);
 	//free(teste);
 }
 
@@ -107,10 +108,16 @@ void mostrarAltura(AVLtree * arvoreAVL){
 }
 
 void exibeRelatorio(AVLtree * arvoreAVL){
+	atualizaArvore(arvoreAVL);
 	printf("-+- Inicio relatorio -+-\n");
 	printf ("%d\n", getQuantidadeNos(arvoreAVL));
-	//enquanto arvore não vazia se vira aqui e faz 
-	// atualizarCliente(getRaiz(arvore))
-	// remover(getRaiz(arvore)) 
+	while(getRaiz(arvoreAVL)!=NULL){
+		long long int codigo = getClientCode(getClient(getRaiz(arvoreAVL)));
+		long long int operacoes = getClientOperationsQuantity(getClient(getRaiz(arvoreAVL)));
+		long long int valor = getClientValue(getClient(getRaiz(arvoreAVL)));
+		printf("%lld %lld %lld\n", codigo, operacoes, valor);
+		removerNo(getRaiz(arvoreAVL), codigo, arvoreAVL);
+		atualizaArvore(arvoreAVL);
+	}
 	printf("-+- Fim relatorio -+-\n");
 }

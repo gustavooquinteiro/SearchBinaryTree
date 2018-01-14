@@ -266,8 +266,6 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 				raiz->right = removerNo(raiz->right, getClientCode(y->client), arvoreAVL);
 
 			}
-			arvoreAVL->nodeQuantity--; 
-			arvoreAVL->treeHeight = maximo(calculaAltura(arvoreAVL->root->left), calculaAltura(arvoreAVL->root->right)) + ONE; 
 		}
 		if(raiz == NULL){
 			return raiz;
@@ -278,5 +276,16 @@ Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
 		}
 
 	return raiz;
+}
+
+void atualizaArvore(AVLtree * arvore){
+	if(arvore->root!=NULL){
+		arvore->treeHeight = calculaAltura(arvore->root) + 1;
+		arvore->nodeQuantity = calculaNivel(arvore->root) + 1;
+	}else{
+		arvore->treeHeight = 0;
+		arvore->nodeQuantity =0;
+	}
+
 }
 

@@ -44,4 +44,5 @@ Node * getRightSon(Node * raiz);
 int getNivel(Node *  no);
 void atualizaQuantidadeNo(AVLtree * arvore);
 Client * getClient(Node * no);
+void atualizaArvore(AVLtree * arvore);
 #endif
