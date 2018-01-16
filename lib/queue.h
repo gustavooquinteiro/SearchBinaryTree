@@ -10,11 +10,11 @@
 typedef struct queue Queue;
 
 Queue * defineQueue();
-Queue * push(Queue * queue, Node * newNode);
+Queue * push(Queue * queue, void * newNode);
 void pop(Queue * queue);
 int isEmpty(Queue * queue);
-Node * front (Queue * queue);
-Node * back(Queue * queue);
+void * front (Queue * queue);
+void * back(Queue * queue);
 void clearQueue(Queue * queue);
 int size(Queue * queue);
 #endif

@@ -35,6 +35,7 @@ int main(){
 		}
 	}
 	exibeRelatorio(arvoreAVL); 
+	cleanTree(arvoreAVL);
 	exit(EXIT_SUCCESS);
 }
 
@@ -57,9 +58,7 @@ void buscaNo(AVLtree * arvoreAVL){
 void removeNo(AVLtree * arvoreAVL){
 	int chave;
 	scanf("%d", &chave);
-	removerNo(getRaiz(arvoreAVL), chave, arvoreAVL);
-	atualizaArvore(arvoreAVL);
-	//free(teste);
+	arvoreAVL = atualizarRaiz(arvoreAVL, chave);
 }
 
 // Função que lista os nós segundo ordem inserida
@@ -120,7 +119,7 @@ void mostrarAltura(AVLtree * arvoreAVL){
 
 // Função que exibe o relatorio final segundo a ordem de remoção da raiz 
 void exibeRelatorio(AVLtree * arvoreAVL){
-	atualizaArvore(arvoreAVL);
+	//atualizaArvore(arvoreAVL);
 	printf("-+- Inicio relatorio -+-\n");
 	printf ("%d\n", getQuantidadeNos(arvoreAVL));
 	while(getRaiz(arvoreAVL)!=NULL){
@@ -128,8 +127,7 @@ void exibeRelatorio(AVLtree * arvoreAVL){
 		long long int operacoes = getClientOperationsQuantity(getClient(getRaiz(arvoreAVL)));
 		long long int valor = getClientValue(getClient(getRaiz(arvoreAVL)));
 		printf("%lld %lld %lld\n", codigo, operacoes, valor);
-		removerNo(getRaiz(arvoreAVL), codigo, arvoreAVL);
-		atualizaArvore(arvoreAVL);
+		arvoreAVL = atualizarRaiz(arvoreAVL, codigo);
 	}
 	printf("-+- Fim relatorio -+-\n");
 }

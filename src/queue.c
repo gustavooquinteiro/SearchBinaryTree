@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/avl.h"
 #include "../lib/queue.h"
 
 
 // Declaração da struct
 typedef struct queue{
-	Node * node; 	
+	void * node; 	
 	struct queue * next;
 	struct queue * begin;
 	struct queue * end;
@@ -30,7 +29,7 @@ Queue * defineQueue(){
 }
 
 // Função que insere um novo elemento na queue.
-Queue * push(Queue * queue, Node * newNode){
+Queue * push(Queue * queue, void * newNode){
 	Queue * new = (Queue *)malloc(sizeof(Queue)); 
 	if (!new){
 		perror(MALLOC_ERROR); 
@@ -67,12 +66,12 @@ int isEmpty(Queue *queue){
 }
 
 // Função que retorna o elemento da frente da queue
-Node * front (Queue * queue){
+void * front (Queue * queue){
 	return !isEmpty(queue)? queue->begin->node: NULL; 
 }
 
 // Função que retorna o elemento do fim da queue
-Node * back (Queue * queue){
+void * back (Queue * queue){
 	return !isEmpty(queue)? queue->end->node: NULL;  
 }
 

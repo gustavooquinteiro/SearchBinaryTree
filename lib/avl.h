@@ -36,7 +36,7 @@ Node * rotacaoDireita(Node * x);
 Node * rotacaoEsquerda(Node * x);
 Node * rotacaoDuplaDireita(Node * x);
 Node * rotacaoDuplaEsquerda(Node * x);
-Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL);
+Node * removerNo(Node * raiz, int x);
 Node * getMinimo(Node * x);
 int calculaBalanceFactor(Node * no);
 int calculaNivel(Node * raiz);
@@ -48,4 +48,6 @@ void atualizaQuantidadeNo(AVLtree * arvore);
 Client * getClient(Node * no);
 void atualizaArvore(AVLtree * arvore);
 int calculaQuantidadeNos(Node * raiz);
+AVLtree * atualizarRaiz(AVLtree * arvore, int chave);
+void cleanTree(AVLtree * arvore);
 #endif

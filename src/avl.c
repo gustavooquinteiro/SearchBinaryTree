@@ -86,26 +86,26 @@ Node * inserirNo(Node * raiz, AVLtree * arvore, Node * noAtual){
 
 // Função que faz o balanceamento da arvore
 Node * balanceamento(Node * x){
-	if (calculaAltura(x->right) - calculaAltura(x->left) == UNBALANCED_TREE_LEFT){
-		Node * y = x->left;
-		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_RIGHT){
-			x = rotacaoDuplaDireita(x);
-		}else
-			x = rotacaoDireita(x);
-	} else{
+	if (calculaBalanceFactor(x) == UNBALANCED_TREE_LEFT){
 		Node * y = x->right;
-		if (calculaAltura(y->right) - calculaAltura(y->left) == BALANCED_TREE_LEFT){
+		if (calculaBalanceFactor(y) == BALANCED_TREE_RIGHT || calculaBalanceFactor(y) == ZERO){
 			x = rotacaoDuplaEsquerda(x);
 		}else
 			x = rotacaoEsquerda(x);
+	} else{
+		Node * y = x->left;
+		if (calculaBalanceFactor(y) == BALANCED_TREE_LEFT || calculaBalanceFactor(y) == ZERO){
+			x = rotacaoDuplaDireita(x);
+		}else
+			x = rotacaoDireita(x);
 	}
 	return x;
 }
 
 /* Função que calcula o fator de balanceamento de um nó
- * Fator de balanceamento utilizado = altura da direita - altura da esquerda */
+ * Fator de balanceamento utilizado = altura da esquerda - altura da direita */
 int calculaBalanceFactor(Node * no){
-	return (!no)? ZERO: calculaAltura(no->right) - calculaAltura(no->left); 
+	return (!no)? ZERO: calculaAltura(no->left) - calculaAltura(no->right); 
 }
 
 // Função que retorna o maior valor entre os dois parametros recebidos 
@@ -238,67 +238,76 @@ Node * getMinimo(Node * x){
 }
 
 // Função que remove um nó, que contenha chave igual a x, da árvore 
-Node * removerNo(Node * raiz, int x, AVLtree * arvoreAVL){
-		if(raiz == NULL){
-			return NULL;
-		}
-		if(x < getClientCode(raiz->client)){
-			raiz->left = removerNo(raiz->left, x, arvoreAVL);
-		}
-		else if(x > getClientCode(raiz->client)){
-			raiz->right = removerNo(raiz->right, x, arvoreAVL);
-		} else{
-			if(raiz->left == NULL){
-				if(raiz == arvoreAVL->root){
-					arvoreAVL->root = raiz->right;
-				}
-				if(raiz->right != NULL)
-					raiz->right->dad = raiz->dad;
-				raiz = raiz->right;
+Node * removerNo(Node * raiz, int x){
+	if(raiz == NULL)
+		return NULL;
+		
+	if(x < getClientCode(raiz->client)){
+		raiz->left = removerNo(raiz->left, x);
+	} else if(x > getClientCode(raiz->client)){
+		raiz->right = removerNo(raiz->right, x);
+	} else{
+		if(raiz->left == NULL && raiz->right != NULL)
+			raiz->right->dad = raiz->dad;
+			
+		if(raiz->right == NULL && raiz->left != NULL)
+			raiz->left->dad = raiz->dad;
 				
+		if( (raiz->left == NULL) || (raiz->right == NULL) ){
+			Node * temp = raiz->left? raiz->left: raiz->right;
+			if (temp == NULL){
+				temp = raiz;
+				raiz = NULL;
+			} else{
+				*raiz = *temp;
+			free(temp);
 			}
-			else if(raiz->right == NULL){
-				if(raiz == arvoreAVL->root){
-					arvoreAVL->root = raiz->left;
-				}
-				if(raiz->left != NULL){
-					raiz->left->dad =raiz->dad;
-				}
-				raiz = raiz->left;
-
-			}else{				
-				Node * y = getMinimo(raiz->right);
-				raiz->client=y->client;
-				raiz->right = removerNo(raiz->right, getClientCode(y->client), arvoreAVL);
-
-			}
+		} else{
+			Node * temp = getMinimo(raiz->right);
+			raiz->client = temp->client;
+			raiz->right = removerNo(raiz->right, getClientCode(temp->client)); 
 		}
-		if(raiz == NULL){
-			return raiz;
-		}
-		raiz->height = maximo(calculaAltura(raiz->left), calculaAltura(raiz->right)) + ONE;
-		if(abs(calculaAltura(raiz->right) - calculaAltura(raiz->left)) == TWO){
+	}
+	if(raiz == NULL)
+		return raiz;
+		
+	raiz->height = maximo(calculaAltura(raiz->left), calculaAltura(raiz->right)) + ONE;
+	int balance = calculaBalanceFactor(raiz);
+	if(abs(balance) == TWO)
 			raiz = balanceamento(raiz);
-		}
+			
 	return raiz;
 }
 
+// Função que define a raiz da arvore
+AVLtree * atualizarRaiz(AVLtree * arvore, int chave){
+	Node * raiz = isTreeEmpty(arvore);
+	arvore->root = removerNo(raiz, chave); 
+	arvore->treeHeight = calculaAltura(arvore->root) + ONE;		
+	arvore->nodeQuantity = calculaQuantidadeNos(arvore->root);
+	return arvore;
+}
+
+
 // Função que calcula a quantidade de nós de uma árvore
 int calculaQuantidadeNos(Node * raiz){
-	if(!raiz) return 0;
-	else if(((raiz->left) == (raiz->right)) && raiz->left == NULL) return 1;
-	return calculaQuantidadeNos(raiz->left) + calculaQuantidadeNos(raiz->right) + 1;
+	if(!raiz) return ZERO;
+	else if(((raiz->left) == (raiz->right)) && raiz->left == NULL) return ONE;
+	return calculaQuantidadeNos(raiz->left) + calculaQuantidadeNos(raiz->right) + ONE;
 }
 
 // Função que atualiza a árvore
 void atualizaArvore(AVLtree * arvore){
 	if(arvore->root!=NULL){
-		arvore->treeHeight = calculaAltura(arvore->root) + 1;
+		arvore->treeHeight = calculaAltura(arvore->root) + ONE;
 		arvore->nodeQuantity =calculaQuantidadeNos(arvore->root);
 	}else{
-		arvore->treeHeight = 0;
-		arvore->nodeQuantity =0;
+		arvore->treeHeight = ZERO;
+		arvore->nodeQuantity = ZERO;
 	}
 
 }
 
+void cleanTree(AVLtree * arvore){
+	free(arvore);
+}
