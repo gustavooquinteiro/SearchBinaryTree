@@ -108,6 +108,64 @@ int calculaBalanceFactor(Node * no){
 	return (!no)? ZERO: calculaAltura(no->left) - calculaAltura(no->right); 
 }
 
+Node * rotacaoDireita(Node * x){
+	Node * y = x->left;
+	if(x){
+	  	if (x->dad){
+	    	if (x->dad->left == x){
+	      		x->dad->left = y;
+	    	} else{
+	      		x->dad->right = y;
+	    	}
+	  	}
+	  	y->dad = x->dad;
+	  	x->left = y->right;
+	  	if (x->left) 
+	    	x->left->dad = x; 
+	  	y->right = x;
+	  	x->dad = y;
+		
+		x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
+		y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
+	}
+	return y;
+}
+
+Node * rotacaoEsquerda(Node * x){
+	Node * y = x->right;
+	if(x){
+		if (x->dad){
+			if (x->dad->left == x){
+				x->dad->left = y;
+			} else{
+				x->dad->right = y;
+			}
+		}
+		y->dad = x->dad;
+		x->right = y->left;
+		if (x->right)
+			x->right->dad = x;
+		y->left = x;
+		x->dad = y;
+		
+		x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
+		y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
+	}
+	return y;
+}
+
+Node * rotacaoDuplaDireita(Node * x){
+	x->left = rotacaoEsquerda(x->left);
+	return (rotacaoDireita(x));
+}
+
+Node * rotacaoDuplaEsquerda(Node * x){
+	x->right = rotacaoDireita(x->right);
+	return (rotacaoEsquerda(x));
+}
+
+
+
 // Função que retorna o maior valor entre os dois parametros recebidos 
 int maximo(int esquerda, int direita){
 	return (esquerda > direita)? esquerda: direita;
@@ -173,62 +231,6 @@ int getQuantidadeNos(AVLtree * arvore){
 	return arvore->nodeQuantity;
 }
 
-// Função que realiza a rotação a direita de um nó e atualiza sua altura
-Node * rotacaoDireita(Node * x){
-	Node * y = x->left;
-	if (x->dad){
-		if (x->dad->left == x){
-			x->dad->left = y;
-		} else{
-			x->dad->right = y;
-		}
-	}
-	y->dad = x->dad;
-	x->left = y->right;
-	if (x->left) 
-		x->left->dad = x; 
-	y->right = x;
-	x->dad = y;
-
-	x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
-	y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
-	return y;
-}
-
-// Função que realiza a rotação a esquerda de um nó e atualiza sua altura
-Node * rotacaoEsquerda(Node * x){
-	Node * y = x->right;
-	if (x->dad){
-		if (x->dad->left == x){
-			x->dad->left = y;
-		} else{
-			x->dad->right = y;
-		}
-	}
-	y->dad = x->dad;
-	x->right = y->left;
-	if (x->right)
-		x->right->dad = x;
-	y->left = x;
-	x->dad = y;
-
-	x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
-	y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
-	return y;
-}
-
-// Função que realiza a rotação dupla a direita de um nó
-Node * rotacaoDuplaDireita(Node * x){
-	x->left = rotacaoEsquerda(x->left);
-	return rotacaoDireita(x);
-}
-
-// Função que realiza a rotação dupla a esquerda de um nó
-Node * rotacaoDuplaEsquerda(Node * x){
-	x->right = rotacaoDireita(x->right);
-	return rotacaoEsquerda(x);
-}
-
 // Função que retorna o mínimo valor de um nó
 Node * getMinimo(Node * x){
 	Node * y = x;
@@ -246,22 +248,21 @@ Node * removerNo(Node * raiz, int x){
 		raiz->left = removerNo(raiz->left, x);
 	} else if(x > getClientCode(raiz->client)){
 		raiz->right = removerNo(raiz->right, x);
-	} else{
-		if(raiz->left == NULL && raiz->right != NULL)
-			raiz->right->dad = raiz->dad;
-			
-		if(raiz->right == NULL && raiz->left != NULL)
-			raiz->left->dad = raiz->dad;
-				
+	} else{	
 		if( (raiz->left == NULL) || (raiz->right == NULL) ){
+			if(raiz->left == NULL && raiz->right != NULL)
+				raiz->right->dad = raiz->dad;
+				
+			if(raiz->right == NULL && raiz->left != NULL)
+				raiz->left->dad = raiz->dad;
+				
 			Node * temp = raiz->left? raiz->left: raiz->right;
 			if (temp == NULL){
 				temp = raiz;
 				raiz = NULL;
-			} else{
+			} else
 				*raiz = *temp;
 			free(temp);
-			}
 		} else{
 			Node * temp = getMinimo(raiz->right);
 			raiz->client = temp->client;
@@ -275,7 +276,7 @@ Node * removerNo(Node * raiz, int x){
 	int balance = calculaBalanceFactor(raiz);
 	if(abs(balance) == TWO)
 			raiz = balanceamento(raiz);
-			
+		
 	return raiz;
 }
 
@@ -294,18 +295,6 @@ int calculaQuantidadeNos(Node * raiz){
 	if(!raiz) return ZERO;
 	else if(((raiz->left) == (raiz->right)) && raiz->left == NULL) return ONE;
 	return calculaQuantidadeNos(raiz->left) + calculaQuantidadeNos(raiz->right) + ONE;
-}
-
-// Função que atualiza a árvore
-void atualizaArvore(AVLtree * arvore){
-	if(arvore->root!=NULL){
-		arvore->treeHeight = calculaAltura(arvore->root) + ONE;
-		arvore->nodeQuantity =calculaQuantidadeNos(arvore->root);
-	}else{
-		arvore->treeHeight = ZERO;
-		arvore->nodeQuantity = ZERO;
-	}
-
 }
 
 void cleanTree(AVLtree * arvore){
