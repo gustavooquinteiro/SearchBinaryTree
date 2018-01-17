@@ -41,7 +41,10 @@ Client * efetuarOperacao(Client * clienteAtual){
 
 // Função que atualiza os dados do cliente, efetuando a operação atual e atualizando a quantidade de operações
 Client * atualizarCliente(Client * clienteAtual, Client * cliente){
-	cliente = efetuarOperacao(clienteAtual); 
+	if (clienteAtual->operacao == ZERO){
+		cliente->saldo += clienteAtual->valor;
+	} else
+		cliente->saldo -= clienteAtual->valor; 
 	cliente->quantidadeOperacoes++; 
 	return cliente;
 }

@@ -122,11 +122,11 @@ void exibeRelatorio(AVLtree * arvoreAVL){
 	//atualizaArvore(arvoreAVL);
 	printf("-+- Inicio relatorio -+-\n");
 	printf ("%d\n", getQuantidadeNos(arvoreAVL));
-	while(getRaiz(arvoreAVL)!=NULL){
+	while(getRaiz(arvoreAVL)){
 		long long int codigo = getClientCode(getClient(getRaiz(arvoreAVL)));
 		long long int operacoes = getClientOperationsQuantity(getClient(getRaiz(arvoreAVL)));
-		long long int valor = getClientValue(getClient(getRaiz(arvoreAVL)));
-		printf("%lld %lld %lld\n", codigo, operacoes, valor);
+		long long int saldo = getSaldoCliente(getClient(getRaiz(arvoreAVL)));
+		printf("%lld %lld %lld\n", codigo, operacoes, saldo);
 		arvoreAVL = atualizarRaiz(arvoreAVL, codigo);
 	}
 	printf("-+- Fim relatorio -+-\n");
