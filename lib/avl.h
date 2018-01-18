@@ -1,4 +1,4 @@
-#include "../lib/client.h"
+#include "client.h"
 #ifndef AVL_H
 #define AVL_H
 
@@ -15,14 +15,13 @@
 #define BALANCED_TREE_RIGHT 1
 
 // Assinaturas das funções e structs
-
 typedef struct no Node; 
 typedef struct tree AVLtree;
 
 AVLtree * definirRaiz(AVLtree * arvore, Node * node); 
 AVLtree * definirArvore();
 Node * criarNo(Client * novoCliente);
-Node * inserirNo(Node * raiz, AVLtree * arvore, Node * actualNode);
+Node * inserirNo(Node * raiz, Node * actualNode);
 Node * balanceamento(Node * arvore);
 Node * busca(Node * arvore, int chave);
 int maximo(int left, int right);

@@ -1,3 +1,7 @@
+#include "../lib/avl.h"
+#include "../lib/client.h"
+#include "../lib/queue.h"
+
 #ifndef MAIN_H
 #define MAIN_H
 

@@ -71,5 +71,7 @@ long long int getClientValue(Client * client){
 
 // Função que remove o cliente da memória
 void removeClient(Client * client){
-	free(client); 
+	if (client)
+		free(client); 
+	client = NULL;
 }

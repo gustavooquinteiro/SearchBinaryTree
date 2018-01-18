@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../lib/avl.h"
-#include "../lib/client.h"
-#include "../lib/queue.h"
  
 // Declaração das structs
 typedef struct no{
@@ -20,7 +18,7 @@ typedef struct tree{
 } AVLtree; 
 
 /* Função que aloca na memória uma árvore AVL
- * perror() da stdio.h para lançar na saída padrão o texto MALLOC_ERROR (da queue.h) junto com o erro especifico
+ * perror() da stdio.h para lançar na saída padrão o texto MALLOC_ERROR junto com o erro especifico
  * exit() da stdlib.h para interromper a execução do programa com o código de falha */
 AVLtree * definirArvore(){
 	AVLtree * arvore = (AVLtree *)malloc(sizeof(AVLtree));
@@ -37,8 +35,9 @@ AVLtree * definirArvore(){
 // Função que define a raiz da arvore
 AVLtree * definirRaiz(AVLtree * arvore, Node * novoNo){
 	Node * raiz = isTreeEmpty(arvore);
-	arvore->root =	 inserirNo(raiz, arvore, novoNo); 
+	arvore->root =	 inserirNo(raiz, novoNo); 
 	arvore->treeHeight = calculaAltura(arvore->root) + ONE;		
+	arvore->nodeQuantity = calculaQuantidadeNos(arvore->root);
 	return arvore;
 }
 
@@ -59,22 +58,23 @@ Node * criarNo(Client * novoCliente){
 }
 
 // Função que insere o nó na arvore 
-Node * inserirNo(Node * raiz, AVLtree * arvore, Node * noAtual){
+Node * inserirNo(Node * raiz, Node * noAtual){
 	if (!raiz){	
-		arvore->nodeQuantity++;
 		noAtual->client = efetuarOperacao(getClient(noAtual));
 		return noAtual; 
 	}
 	if (getClientCode(getClient(noAtual)) > getClientCode(getClient(raiz))){
-		raiz->right = inserirNo(getRightSon(raiz), arvore, noAtual);
+		raiz->right = inserirNo(getRightSon(raiz), noAtual);
 		// Atualiza o filho de raiz
 		raiz->right->dad = raiz;
 	}
-	if (getClientCode(getClient(noAtual)) == getClientCode(getClient(raiz)))
+	if (getClientCode(getClient(noAtual)) == getClientCode(getClient(raiz))){
 		raiz->client = atualizarCliente(getClient(noAtual), getClient(raiz));
+		
+	}
 
 	if (getClientCode(getClient(noAtual)) < getClientCode(getClient(raiz))){
-		raiz->left = inserirNo(getLeftSon(raiz), arvore, noAtual);
+		raiz->left = inserirNo(getLeftSon(raiz), noAtual);
 		raiz->left->dad = raiz;	
 	}
 	raiz->height = maximo(calculaAltura(getLeftSon(raiz)), calculaAltura(getRightSon(raiz))) + ONE;	
@@ -164,8 +164,6 @@ Node * rotacaoDuplaEsquerda(Node * x){
 	return (rotacaoEsquerda(x));
 }
 
-
-
 // Função que retorna o maior valor entre os dois parametros recebidos 
 int maximo(int esquerda, int direita){
 	return (esquerda > direita)? esquerda: direita;
@@ -244,9 +242,9 @@ Node * removerNo(Node * raiz, int x){
 	if(raiz == NULL)
 		return NULL;
 		
-	if(x < getClientCode(raiz->client)){
+	if(x < getClientCode(getClient(raiz))){
 		raiz->left = removerNo(raiz->left, x);
-	} else if(x > getClientCode(raiz->client)){
+	} else if(x > getClientCode(getClient(raiz))){
 		raiz->right = removerNo(raiz->right, x);
 	} else{	
 		if( (raiz->left == NULL) || (raiz->right == NULL) ){
@@ -259,14 +257,17 @@ Node * removerNo(Node * raiz, int x){
 			Node * temp = raiz->left? raiz->left: raiz->right;
 			if (temp == NULL){
 				temp = raiz;
+				//removeClient(getClient(raiz));
 				raiz = NULL;
 			} else
 				*raiz = *temp;
+			
+			//removeClient(getClient(temp));
 			free(temp);
 		} else{
 			Node * temp = getMinimo(raiz->right);
-			raiz->client = temp->client;
-			raiz->right = removerNo(raiz->right, getClientCode(temp->client)); 
+			raiz->client = getClient(temp);
+			raiz->right = removerNo(raiz->right, getClientCode(getClient(temp))); 
 		}
 	}
 	if(raiz == NULL)
@@ -298,5 +299,9 @@ int calculaQuantidadeNos(Node * raiz){
 }
 
 void cleanTree(AVLtree * arvore){
-	free(arvore);
+	if (arvore)
+		free(arvore);
+	arvore = NULL;
 }
+
+

@@ -1,3 +1,4 @@
+#include "avl.h"	
 #ifndef FILA_H
 #define FILA_H
 
@@ -10,11 +11,11 @@
 typedef struct queue Queue;
 
 Queue * defineQueue();
-Queue * push(Queue * queue, void * newNode);
-void pop(Queue * queue);
+Queue * push(Queue * queue, Node * newNode);
+Queue * pop(Queue * queue);
 int isEmpty(Queue * queue);
-void * front (Queue * queue);
-void * back(Queue * queue);
+Node * front (Queue * queue);
+Node * back(Queue * queue);
 void clearQueue(Queue * queue);
 int size(Queue * queue);
 #endif

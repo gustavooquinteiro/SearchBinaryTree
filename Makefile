@@ -19,6 +19,7 @@ CC = gcc
 
 # Flags utilizadas na compilação
 CC_FLAGS = -c \
+           -g \
            -Wall \
            -Wextra \
            -Werror \

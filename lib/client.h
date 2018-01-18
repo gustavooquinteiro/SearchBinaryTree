@@ -16,7 +16,7 @@ long long int getSaldoCliente(Client * cliente);
 long long int getClientCode(Client * client);
 long long int getClientOperationsQuantity(Client * client);
 long long int getClientValue(Client * client);
-
+void removeClient(Client * client);
 
 
 #endif
