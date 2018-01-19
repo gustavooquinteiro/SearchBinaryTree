@@ -33,9 +33,9 @@ AVLtree * definirArvore(){
 }
 
 // Função que define a raiz da arvore
-AVLtree * definirRaiz(AVLtree * arvore, Node * novoNo){
+AVLtree * definirRaiz(AVLtree * arvore, Client * cliente){
 	Node * raiz = isTreeEmpty(arvore);
-	arvore->root =	 inserirNo(raiz, novoNo);
+	arvore->root =	 inserirNo(raiz, cliente);
 	arvore->treeHeight = calculaAltura(arvore->root) + ONE;
 	arvore->nodeQuantity = calculaQuantidadeNos(arvore->root);
 	return arvore;
@@ -48,7 +48,7 @@ Node * criarNo(Client * novoCliente){
 		perror(MALLOC_ERROR);
 		exit(EXIT_FAILURE);
 	} else{
-		novoNo->client = novoCliente;
+		novoNo->client =  efetuarOperacao(novoCliente);
 		novoNo->right = NULL;
 		novoNo->left = NULL;
 		novoNo->dad = NULL;
@@ -58,23 +58,22 @@ Node * criarNo(Client * novoCliente){
 }
 
 // Função que insere o nó na arvore
-Node * inserirNo(Node * raiz, Node * noAtual){
+Node * inserirNo(Node * raiz, Client * cliente){
 	if (!raiz){
-		noAtual->client = efetuarOperacao(getClient(noAtual));
-		return noAtual;
+        raiz = criarNo(cliente);
+		return raiz;
 	}
-	if (getClientCode(getClient(noAtual)) > getClientCode(getClient(raiz))){
-		raiz->right = inserirNo(getRightSon(raiz), noAtual);
-		// Atualiza o filho de raiz
+	if (getClientCode(cliente) > getClientCode(getClient(raiz))){
+		raiz->right = inserirNo(getRightSon(raiz), cliente);
 		raiz->right->dad = raiz;
 	}
-	if (getClientCode(getClient(noAtual)) == getClientCode(getClient(raiz))){
-		raiz->client = atualizarCliente(getClient(noAtual), getClient(raiz));
-
+	if (getClientCode(cliente) == getClientCode(getClient(raiz))){
+		raiz->client = atualizarCliente(cliente, getClient(raiz));
+        removeClient(cliente);
 	}
 
-	if (getClientCode(getClient(noAtual)) < getClientCode(getClient(raiz))){
-		raiz->left = inserirNo(getLeftSon(raiz), noAtual);
+	if (getClientCode(cliente) < getClientCode(getClient(raiz))){
+		raiz->left = inserirNo(getLeftSon(raiz), cliente);
 		raiz->left->dad = raiz;
 	}
 	raiz->height = maximo(calculaAltura(getLeftSon(raiz)), calculaAltura(getRightSon(raiz))) + ONE;
@@ -257,14 +256,11 @@ Node * removerNo(Node * raiz, int x){
 			Node * temp = raiz->left? raiz->left: raiz->right;
 			if (temp == NULL){
 				temp = raiz;
-				//removeClient(getClient(raiz));
 				raiz = NULL;
-				free(raiz);
 			} else
 				*raiz = *temp;
 
-			//removeClient(getClient(temp));
-			//free(temp);
+			cleanNode(temp);
 		} else{
 			Node * temp = getMinimo(raiz->right);
 			raiz->client = getClient(temp);
@@ -305,4 +301,8 @@ void cleanTree(AVLtree * arvore){
 	arvore = NULL;
 }
 
-
+void cleanNode(Node * node){
+    removeClient(getClient(node));
+    free(node);
+    node = NULL;
+}

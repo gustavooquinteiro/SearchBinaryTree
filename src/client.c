@@ -8,7 +8,7 @@ typedef struct cliente{
 	int operacao;
 	long long int valor;
 	long long int saldo;
-	long long int quantidadeOperacoes; 
+	long long int quantidadeOperacoes;
 } Client;
 
 /* Função que aloca na memória um cliente com seus atributos
@@ -20,10 +20,10 @@ Client * criarCliente (int codigoCliente, int operacao, int valor){
 		exit(EXIT_FAILURE);
 	} else{
 		novoCliente->codigoCliente = codigoCliente;
-		novoCliente->operacao = operacao;		
+		novoCliente->operacao = operacao;
 		novoCliente->valor = valor;
 		novoCliente->saldo = ZERO;
-		novoCliente->quantidadeOperacoes = ONE; 
+		novoCliente->quantidadeOperacoes = ONE;
 		return novoCliente;
 	}
 }
@@ -44,8 +44,8 @@ Client * atualizarCliente(Client * clienteAtual, Client * cliente){
 	if (clienteAtual->operacao == ZERO){
 		cliente->saldo += clienteAtual->valor;
 	} else
-		cliente->saldo -= clienteAtual->valor; 
-	cliente->quantidadeOperacoes++; 
+		cliente->saldo -= clienteAtual->valor;
+	cliente->quantidadeOperacoes++;
 	return cliente;
 }
 
@@ -72,6 +72,6 @@ long long int getClientValue(Client * client){
 // Função que remove o cliente da memória
 void removeClient(Client * client){
 	if (client)
-		free(client); 
+		free(client);
 	client = NULL;
 }

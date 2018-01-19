@@ -32,7 +32,6 @@ int main(){
 		}
 	}
 	exibeRelatorio(arvoreAVL);
-	cleanTree(arvoreAVL);
 	exit(EXIT_SUCCESS);
 }
 
@@ -40,8 +39,8 @@ int main(){
 void insereNo(AVLtree * arvoreAVL){
 	long long int codigoCliente, valor, operacao;
 	scanf("%lld %lld %lld", &codigoCliente, &operacao, &valor);
-	Node * novoNo = criarNo(criarCliente(codigoCliente, operacao, valor));
-	arvoreAVL = definirRaiz(arvoreAVL, novoNo);
+	Client * cliente = criarCliente(codigoCliente, operacao, valor);
+	arvoreAVL = definirRaiz(arvoreAVL, cliente);
 }
 
 // Função que busca determinada chave na árvore e mostra na tela mensagem informativa
@@ -127,6 +126,6 @@ void exibeRelatorio(AVLtree * arvoreAVL){
 		printf("%lld %lld %lld\n", codigo, operacoes, saldo);
 		arvoreAVL = atualizarRaiz(arvoreAVL, codigo);
 	}
-	free(arvoreAVL);
+	cleanTree(arvoreAVL);
 	printf("-+- Fim relatorio -+-\n");
 }

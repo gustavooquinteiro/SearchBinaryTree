@@ -15,13 +15,13 @@
 #define BALANCED_TREE_RIGHT 1
 
 // Assinaturas das funções e structs
-typedef struct no Node; 
+typedef struct no Node;
 typedef struct tree AVLtree;
 
-AVLtree * definirRaiz(AVLtree * arvore, Node * node); 
+AVLtree * definirRaiz(AVLtree * arvore, Client * client);
 AVLtree * definirArvore();
 Node * criarNo(Client * novoCliente);
-Node * inserirNo(Node * raiz, Node * actualNode);
+Node * inserirNo(Node * raiz, Client * client);
 Node * balanceamento(Node * arvore);
 Node * busca(Node * arvore, int chave);
 int maximo(int left, int right);
@@ -41,7 +41,7 @@ int calculaBalanceFactor(Node * no);
 int calculaNivel(Node * raiz);
 int getQuantidadeNos(AVLtree * arvore);
 Node * getLeftSon(Node * raiz);
-Node * getRightSon(Node * raiz); 
+Node * getRightSon(Node * raiz);
 int getNivel(Node *  no);
 void atualizaQuantidadeNo(AVLtree * arvore);
 Client * getClient(Node * no);
@@ -49,4 +49,6 @@ void atualizaArvore(AVLtree * arvore);
 int calculaQuantidadeNos(Node * raiz);
 AVLtree * atualizarRaiz(AVLtree * arvore, int chave);
 void cleanTree(AVLtree * arvore);
+void cleanNode(Node * node);
+
 #endif
