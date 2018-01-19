@@ -51,12 +51,12 @@ Client * atualizarCliente(Client * clienteAtual, Client * cliente){
 
 // Função que retorna o saldo do cliente
 long long int getSaldoCliente(Client * cliente){
-	return cliente->saldo;
+    return cliente->saldo;
 }
 
 // Função que retorna o código do cliente
 long long int getClientCode(Client * client){
-	return client->codigoCliente;
+    return client->codigoCliente;
 }
 
 // Função que retorna a quantidade de operações do cliente

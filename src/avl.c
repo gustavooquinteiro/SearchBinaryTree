@@ -66,15 +66,13 @@ Node * inserirNo(Node * raiz, Client * cliente){
 	if (getClientCode(cliente) > getClientCode(getClient(raiz))){
 		raiz->right = inserirNo(getRightSon(raiz), cliente);
 		raiz->right->dad = raiz;
-	}
-	if (getClientCode(cliente) == getClientCode(getClient(raiz))){
-		raiz->client = atualizarCliente(cliente, getClient(raiz));
-        removeClient(cliente);
-	}
-
-	if (getClientCode(cliente) < getClientCode(getClient(raiz))){
+	}else if (getClientCode(cliente) < getClientCode(getClient(raiz))){
 		raiz->left = inserirNo(getLeftSon(raiz), cliente);
 		raiz->left->dad = raiz;
+	}else{
+		raiz->client = atualizarCliente(cliente, getClient(raiz));
+        removeClient(cliente);
+        return raiz;
 	}
 	raiz->height = maximo(calculaAltura(getLeftSon(raiz)), calculaAltura(getRightSon(raiz))) + ONE;
 	//abs(int __x), da stdio.h, retorna valor absoluto, i.e, módulo do número
@@ -174,7 +172,7 @@ int calculaAltura(Node * node){
 }
 
 // Função de busca da chave na arvore
-Node * busca(Node * arvore, int chave){
+Node * busca(Node * arvore, long long int chave){
 	if (!arvore || chave == getClientCode(arvore->client))
 		return arvore;
 	if (chave < getClientCode(arvore->client)){
@@ -237,24 +235,24 @@ Node * getMinimo(Node * x){
 }
 
 // Função que remove um nó, que contenha chave igual a x, da árvore
-Node * removerNo(Node * raiz, int x){
-	if(raiz == NULL)
-		return NULL;
+Node * removerNo(Node * raiz, long long int x){
+	if(!raiz)
+		return raiz;
 
 	if(x < getClientCode(getClient(raiz))){
 		raiz->left = removerNo(raiz->left, x);
 	} else if(x > getClientCode(getClient(raiz))){
 		raiz->right = removerNo(raiz->right, x);
 	} else{
-		if( (raiz->left == NULL) || (raiz->right == NULL) ){
-			if(raiz->left == NULL && raiz->right != NULL)
+		if( (!raiz->left) || (!raiz->right) ){
+			if(!raiz->left && raiz->right)
 				raiz->right->dad = raiz->dad;
 
-			if(raiz->right == NULL && raiz->left != NULL)
+			if(!raiz->right && raiz->left)
 				raiz->left->dad = raiz->dad;
 
 			Node * temp = raiz->left? raiz->left: raiz->right;
-			if (temp == NULL){
+			if (!temp){
 				temp = raiz;
 				raiz = NULL;
 			} else
@@ -262,12 +260,13 @@ Node * removerNo(Node * raiz, int x){
 
 			cleanNode(temp);
 		} else{
-			Node * temp = getMinimo(raiz->right);
-			raiz->client = getClient(temp);
-			raiz->right = removerNo(raiz->right, getClientCode(getClient(temp)));
+			Node * tmp = getMinimo(raiz->right);
+			raiz->client = getClient(tmp);
+            if (getClient(tmp))
+			    raiz->right = removerNo(raiz->right, getClientCode(getClient(tmp)));
 		}
 	}
-	if(raiz == NULL)
+	if(!raiz)
 		return raiz;
 
 	raiz->height = maximo(calculaAltura(raiz->left), calculaAltura(raiz->right)) + ONE;
@@ -279,7 +278,7 @@ Node * removerNo(Node * raiz, int x){
 }
 
 // Função que define a raiz da arvore
-AVLtree * atualizarRaiz(AVLtree * arvore, int chave){
+AVLtree * atualizarRaiz(AVLtree * arvore, long long int chave){
 	Node * raiz = isTreeEmpty(arvore);
 	arvore->root = removerNo(raiz, chave);
 	arvore->treeHeight = calculaAltura(arvore->root) + ONE;
@@ -291,7 +290,7 @@ AVLtree * atualizarRaiz(AVLtree * arvore, int chave){
 // Função que calcula a quantidade de nós de uma árvore
 int calculaQuantidadeNos(Node * raiz){
 	if(!raiz) return ZERO;
-	else if(((raiz->left) == (raiz->right)) && raiz->left == NULL) return ONE;
+	else if(((raiz->left) == (raiz->right)) && !raiz->left) return ONE;
 	return calculaQuantidadeNos(raiz->left) + calculaQuantidadeNos(raiz->right) + ONE;
 }
 
@@ -302,7 +301,9 @@ void cleanTree(AVLtree * arvore){
 }
 
 void cleanNode(Node * node){
-    removeClient(getClient(node));
-    free(node);
+    if (node){
+        removeClient(getClient(node));
+        free(node);
+    }
     node = NULL;
 }
