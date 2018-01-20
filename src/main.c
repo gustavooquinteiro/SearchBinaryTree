@@ -116,7 +116,6 @@ void mostrarAltura(AVLtree * arvoreAVL){
 
 // Função que exibe o relatorio final segundo a ordem de remoção da raiz
 void exibeRelatorio(AVLtree * arvoreAVL){
-	//atualizaArvore(arvoreAVL);
 	printf("-+- Inicio relatorio -+-\n");
 	printf ("%d\n", getQuantidadeNos(arvoreAVL));
 	while(getRaiz(arvoreAVL)){
@@ -126,6 +125,6 @@ void exibeRelatorio(AVLtree * arvoreAVL){
 		printf("%lld %lld %lld\n", codigo, operacoes, saldo);
 		arvoreAVL = atualizarRaiz(arvoreAVL, codigo);
 	}
-	cleanTree(arvoreAVL);
+    cleanTree(arvoreAVL);
 	printf("-+- Fim relatorio -+-\n");
 }

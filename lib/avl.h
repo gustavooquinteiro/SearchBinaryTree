@@ -2,17 +2,10 @@
 #ifndef AVL_H
 #define AVL_H
 
-// Definir constantes utéis
+// Definição de constantes utéis ao código a fim de legibilizar sua leitura
 #define ZERO 0
 #define ONE 1
-
-// Definir constantes de fatores de balanceamentos da árvore
 #define TWO 2
-
-#define UNBALANCED_TREE_LEFT -2
-
-#define BALANCED_TREE_LEFT -1
-#define BALANCED_TREE_RIGHT 1
 
 // Assinaturas das funções e structs
 typedef struct no Node;
@@ -23,7 +16,7 @@ AVLtree * definirArvore();
 Node * criarNo(Client * novoCliente);
 Node * inserirNo(Node * raiz, Client * client);
 Node * balanceamento(Node * arvore);
-Node * busca(Node * arvore, long long int chave);
+Node * busca(Node * arvore, int chave);
 int maximo(int left, int right);
 int calculaAltura(Node * arvore);
 Node * isTreeEmpty(AVLtree * tree);
@@ -35,7 +28,7 @@ Node * rotacaoDireita(Node * x);
 Node * rotacaoEsquerda(Node * x);
 Node * rotacaoDuplaDireita(Node * x);
 Node * rotacaoDuplaEsquerda(Node * x);
-Node * removerNo(Node * raiz, long long int x);
+Node * removerNo(Node * raiz, int x);
 Node * getMinimo(Node * x);
 int calculaBalanceFactor(Node * no);
 int calculaNivel(Node * raiz);
@@ -47,8 +40,7 @@ void atualizaQuantidadeNo(AVLtree * arvore);
 Client * getClient(Node * no);
 void atualizaArvore(AVLtree * arvore);
 int calculaQuantidadeNos(Node * raiz);
-AVLtree * atualizarRaiz(AVLtree * arvore, long long int chave);
+AVLtree * atualizarRaiz(AVLtree * arvore, int chave);
 void cleanTree(AVLtree * arvore);
-void cleanNode(Node * node);
-
+void cleanNode(Node * nodeToRemove);
 #endif

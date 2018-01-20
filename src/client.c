@@ -46,17 +46,27 @@ Client * atualizarCliente(Client * clienteAtual, Client * cliente){
 	} else
 		cliente->saldo -= clienteAtual->valor;
 	cliente->quantidadeOperacoes++;
+    removeClient(clienteAtual);
 	return cliente;
 }
 
 // Função que retorna o saldo do cliente
 long long int getSaldoCliente(Client * cliente){
-    return cliente->saldo;
+	return cliente->saldo;
 }
 
 // Função que retorna o código do cliente
 long long int getClientCode(Client * client){
-    return client->codigoCliente;
+	if(client)
+        return client->codigoCliente;
+	return -1;
+}
+
+// Função que retorna a operação do cliente
+long long int getClientOperation(Client* client) {
+	if(client)
+        return client->operacao;
+	return -1;
 }
 
 // Função que retorna a quantidade de operações do cliente
@@ -69,9 +79,21 @@ long long int getClientValue(Client * client){
 	return client->valor;
 }
 
+// Função que realiza a cópia do cliente
+void alterarClient(Client* client, long long clientCode, long long value, long long operation, long long saldo, long long clientOperationsQuantity) {
+	if(client) {
+		client->codigoCliente = clientCode;
+		client->valor = value;
+		client->saldo = saldo;
+		client->operacao = operation;
+		client->quantidadeOperacoes = clientOperationsQuantity;
+	}
+}
+
 // Função que remove o cliente da memória
 void removeClient(Client * client){
-	if (client)
+	if (client){
 		free(client);
-	client = NULL;
+	    client = NULL;
+    }
 }
