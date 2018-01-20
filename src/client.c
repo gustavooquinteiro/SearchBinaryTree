@@ -8,7 +8,7 @@ typedef struct cliente{
 	int operacao;
 	long long int valor;
 	long long int saldo;
-	long long int quantidadeOperacoes; 
+	long long int quantidadeOperacoes;
 } Client;
 
 /* Função que aloca na memória um cliente com seus atributos
@@ -20,10 +20,10 @@ Client * criarCliente (int codigoCliente, int operacao, int valor){
 		exit(EXIT_FAILURE);
 	} else{
 		novoCliente->codigoCliente = codigoCliente;
-		novoCliente->operacao = operacao;		
+		novoCliente->operacao = operacao;
 		novoCliente->valor = valor;
 		novoCliente->saldo = ZERO;
-		novoCliente->quantidadeOperacoes = ONE; 
+		novoCliente->quantidadeOperacoes = ONE;
 		return novoCliente;
 	}
 }
@@ -44,8 +44,9 @@ Client * atualizarCliente(Client * clienteAtual, Client * cliente){
 	if (clienteAtual->operacao == ZERO){
 		cliente->saldo += clienteAtual->valor;
 	} else
-		cliente->saldo -= clienteAtual->valor; 
-	cliente->quantidadeOperacoes++; 
+		cliente->saldo -= clienteAtual->valor;
+	cliente->quantidadeOperacoes++;
+    removeClient(clienteAtual);
 	return cliente;
 }
 
@@ -56,7 +57,16 @@ long long int getSaldoCliente(Client * cliente){
 
 // Função que retorna o código do cliente
 long long int getClientCode(Client * client){
-	return client->codigoCliente;
+	if(client)
+        return client->codigoCliente;
+	return -1;
+}
+
+// Função que retorna a operação do cliente
+long long int getClientOperation(Client* client) {
+	if(client)
+        return client->operacao;
+	return -1;
 }
 
 // Função que retorna a quantidade de operações do cliente
@@ -69,9 +79,21 @@ long long int getClientValue(Client * client){
 	return client->valor;
 }
 
+// Função que realiza a cópia do cliente
+void alterarClient(Client* client, long long clientCode, long long value, long long operation, long long saldo, long long clientOperationsQuantity) {
+	if(client) {
+		client->codigoCliente = clientCode;
+		client->valor = value;
+		client->saldo = saldo;
+		client->operacao = operation;
+		client->quantidadeOperacoes = clientOperationsQuantity;
+	}
+}
+
 // Função que remove o cliente da memória
 void removeClient(Client * client){
-	if (client)
-		free(client); 
-	client = NULL;
+	if (client){
+		free(client);
+	    client = NULL;
+    }
 }
