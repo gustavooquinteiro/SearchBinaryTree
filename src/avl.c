@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "../lib/avl.h"
 
 // Declaração das structs
@@ -17,9 +15,6 @@ typedef struct tree{
 	int nodeQuantity;
 } AVLtree;
 
-/* Função que aloca na memória uma árvore AVL
- * perror() da stdio.h para lançar na saída padrão o texto MALLOC_ERROR junto com o erro especifico
- * exit() da stdlib.h para interromper a execução do programa com o código de falha */
 AVLtree * definirArvore(){
 	AVLtree * arvore = (AVLtree *)malloc(sizeof(AVLtree));
 	if (!arvore){
@@ -32,7 +27,6 @@ AVLtree * definirArvore(){
 	return arvore;
 }
 
-// Função que define a raiz da arvore
 AVLtree * definirRaiz(AVLtree * arvore, Client * cliente){
 	Node * raiz = isTreeEmpty(arvore);
 	arvore->root =	 inserirNo(raiz, cliente);
@@ -41,7 +35,6 @@ AVLtree * definirRaiz(AVLtree * arvore, Client * cliente){
 	return arvore;
 }
 
-// Função que aloca na memória um nó com os atributos do cliente
 Node * criarNo(Client * novoCliente){
 	Node * novoNo = (Node *)malloc(sizeof(Node));
 	if (!novoNo){
@@ -57,7 +50,7 @@ Node * criarNo(Client * novoCliente){
 	return novoNo;
 }
 
-// Função que insere o nó na arvore
+
 Node * inserirNo(Node * raiz, Client * cliente){
     // Caso nó atual seja uma folha, aloca na memória esse novo nó com o cliente, efetuando suas operções
     if (!raiz){
@@ -80,14 +73,12 @@ Node * inserirNo(Node * raiz, Client * cliente){
 		return raiz;
 	}
     // Calcula a altura do nó e se necessário realiza o balanceamento desse nó
-    // Foi utilizado a função abs(int __x), da stdio.h, que retorna valor absoluto, i.e, módulo do número
 	raiz->height = maximo(calculaAltura(getLeftSon(raiz)), calculaAltura(getRightSon(raiz))) + ONE;
 	if(abs(calculaAltura(raiz->right) - calculaAltura(raiz->left)) == TWO)
 		raiz = balanceamento(raiz);
 	return raiz;
 }
 
-// Função que faz o balanceamento da arvore
 Node * balanceamento(Node * x){
 	if (calculaBalanceFactor(x) == -TWO){
 		Node * y = x->right;
@@ -105,8 +96,6 @@ Node * balanceamento(Node * x){
 	return x;
 }
 
-/* Função que calcula o fator de balanceamento de um nó
- * Fator de balanceamento utilizado = altura da esquerda - altura da direita */
 int calculaBalanceFactor(Node * no){
 	if (!no){
         return ZERO;
@@ -114,7 +103,6 @@ int calculaBalanceFactor(Node * no){
         return calculaAltura(no->left) - calculaAltura(no->right);
 }
 
-// Função que realiza a rotação a direita de um nó
 Node * rotacaoDireita(Node * x){
 	Node * y = x->left;
 	if(x){
@@ -138,7 +126,6 @@ Node * rotacaoDireita(Node * x){
 	return y;
 }
 
-// Função que realiza a rotação a esquerda de um nó
 Node * rotacaoEsquerda(Node * x){
 	Node * y = x->right;
 	if(x){
@@ -162,13 +149,11 @@ Node * rotacaoEsquerda(Node * x){
 	return y;
 }
 
-// Função que realiza a dupla rotação a direita de um nó
 Node * rotacaoDuplaDireita(Node * x){
 	x->left = rotacaoEsquerda(x->left);
 	return (rotacaoDireita(x));
 }
 
-// Função que realiza a dupla rotação a esquerda de um nó
 Node * rotacaoDuplaEsquerda(Node * x){
 	x->right = rotacaoDireita(x->right);
 	return (rotacaoEsquerda(x));
@@ -179,12 +164,10 @@ int maximo(int esquerda, int direita){
 	return (esquerda > direita)? esquerda: direita;
 }
 
-// Função que retorna a altura de determinado no da arvore
 int calculaAltura(Node * node){
 	return (!node)? -ONE: maximo(calculaAltura(node->left), calculaAltura(node->right)) + ONE;
 }
 
-// Função de busca da chave na arvore
 Node * busca(Node * arvore, int chave){
 	if (!arvore || chave == getClientCode(arvore->client))
 		return arvore;
@@ -194,28 +177,24 @@ Node * busca(Node * arvore, int chave){
 		return busca(getRightSon(arvore), chave);
 }
 
-// Função que retorna o filho a esquerda de um nó
 Node * getLeftSon(Node * raiz){
 	if(raiz)
         return raiz->left;
 	return NULL;
 }
 
-// Função que retorna o filho a direita de um nó
 Node * getRightSon(Node * raiz){
 	if(raiz)
         return raiz->right;
 	return NULL;
 }
 
-// Função que retorna um cliente de um nó
 Client * getClient(Node * no){
 	if(no)
         return no->client;
 	return NULL;
 }
 
-// Função que verifica se a árvore está vazia
 Node * isTreeEmpty(AVLtree * arvore){
 	if(arvore){
         if (getAlturaArvore(arvore) == ZERO){
@@ -226,12 +205,10 @@ Node * isTreeEmpty(AVLtree * arvore){
 	return NULL;
 }
 
-// Função que retorna a altura da árvore
 int getAlturaArvore (AVLtree * arvore){
 	return arvore->treeHeight;
 }
 
-// Função que verifica se a árvore tem uma raiz
 Node * isRootDefined(AVLtree * arvore){
 	if (!arvore->root){
         return NULL;
@@ -239,12 +216,10 @@ Node * isRootDefined(AVLtree * arvore){
         return arvore->root;
 }
 
-// Função que retorna a raiz de uma árvore
 Node * getRaiz(AVLtree * arvore){
 	return isRootDefined(arvore);
 }
 
-// Função que calcula o nível de um nó
 int calculaNivel(Node * raiz){
 	if (!raiz->dad){
         return ONE;
@@ -252,17 +227,14 @@ int calculaNivel(Node * raiz){
         return calculaNivel(raiz->dad) + ONE;
 }
 
-// Função que retorna a quantidade de nós de uma árvore
 int getQuantidadeNos(AVLtree * arvore){
 	return arvore->nodeQuantity;
 }
 
-// Função que retorna o sucessor do nó
 Node * sucessor(Node * raiz){
     return getMinimo(raiz->right);
 }
 
-// Função que retorna o menor valor, a partir de um nó fornecido
 Node * getMinimo(Node * x){
 	if(x) {
 		Node * y = x;
@@ -273,7 +245,6 @@ Node * getMinimo(Node * x){
 	return NULL;
 }
 
-// Função que remove um nó, que contenha chave igual a x, da árvore
 Node * removerNo(Node * raiz, int x){
 	Node* nodeToRemove = NULL;
 
@@ -346,7 +317,6 @@ Node * removerNo(Node * raiz, int x){
 	return raiz;
 }
 
-// Função que redefine a raiz da arvore
 AVLtree * atualizarRaiz(AVLtree * arvore, int chave){
 	Node * raiz = isTreeEmpty(arvore);
 	arvore->root = removerNo(raiz, chave);
@@ -355,21 +325,17 @@ AVLtree * atualizarRaiz(AVLtree * arvore, int chave){
 	return arvore;
 }
 
-
-// Função que calcula a quantidade de nós de uma árvore
 int calculaQuantidadeNos(Node * raiz){
 	if(!raiz) return ZERO;
-	else if(((raiz->left) == (raiz->right)) && raiz->left == NULL) return ONE;
+	else if(((raiz->left) == (raiz->right)) && !raiz->left) return ONE;
 	return calculaQuantidadeNos(raiz->left) + calculaQuantidadeNos(raiz->right) + ONE;
 }
 
-// Função que retira a arvore da memória
 void cleanTree(AVLtree * arvore){
     free(arvore);
     arvore = NULL;
 }
 
-// Função que retira o nó da memória, assim como o cliente contido
 void cleanNode(Node * nodeToRemove){
     if (nodeToRemove){
     	removeClient(getClient(nodeToRemove));

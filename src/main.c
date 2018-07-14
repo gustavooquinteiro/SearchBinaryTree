@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "../lib/main.h"
-
-/* Trabalho de Estrutura de Dados e Algoritmos I - MATA40
- * Desenvolvido por Fábio Lopes Gomes e Gustavo Oliveira Quinteiro
- * Maiores detalhes do desenvolvimento vide https://github.com/gustavooquinteiro/SearchBinaryTree */
 
 int main(){
 	AVLtree * arvoreAVL = definirArvore();
@@ -35,7 +29,6 @@ int main(){
 	exit(EXIT_SUCCESS);
 }
 
-// Função que insere um nó com um cliente na árvore
 void insereNo(AVLtree * arvoreAVL){
 	long long int codigoCliente, valor, operacao;
 	scanf("%lld %lld %lld", &codigoCliente, &operacao, &valor);
@@ -43,28 +36,24 @@ void insereNo(AVLtree * arvoreAVL){
 	arvoreAVL = definirRaiz(arvoreAVL, cliente);
 }
 
-// Função que busca determinada chave na árvore e mostra na tela mensagem informativa
 void buscaNo(AVLtree * arvoreAVL){
 	long long int chave;
 	scanf ("%lld", &chave);
 	printf("%s %lld\n", busca(getRaiz(arvoreAVL), chave)? FOUND_KEY_MESSAGE: NOT_FOUND_KEY_MESSAGE, chave);
 }
 
-// Função que remove determinada chave da árvore, se essa chave existir
 void removeNo(AVLtree * arvoreAVL){
 	long long int chave;
 	scanf("%lld", &chave);
 	arvoreAVL = atualizarRaiz(arvoreAVL, chave);
 }
 
-// Função que lista os nós segundo ordem inserida
 void listarNos(AVLtree * arvoreAVL){
 	char ordem;
 	scanf(" %c", &ordem);
 	(ordem == DECRESCENT_ORDER)? listarDecrescente(getRaiz(arvoreAVL)):listarCrescente(getRaiz(arvoreAVL));
 }
 
-// Função que lista todos os nós da arvore em ordem decrescente
 void listarDecrescente(Node * raiz){
 	if (raiz){
 		listarDecrescente(getRightSon(raiz));
@@ -73,7 +62,6 @@ void listarDecrescente(Node * raiz){
 	}
 }
 
-// Função que lista todos os nós da arvore em ordem crescente
 void listarCrescente(Node * raiz){
 	if (raiz){
 		listarCrescente(getLeftSon(raiz));
@@ -82,7 +70,6 @@ void listarCrescente(Node * raiz){
 	}
 }
 
-// Função que lista determinado nível da árvore, se nível existente
 void listarNivel(AVLtree * arvoreAVL){
 	int nivel;
 	scanf("%d", &nivel);
@@ -109,12 +96,10 @@ void listarNivel(AVLtree * arvoreAVL){
 	clearQueue(fila);
 }
 
-// Função que mostra a altura da arvore
 void mostrarAltura(AVLtree * arvoreAVL){
 	printf("%d\n", getAlturaArvore(arvoreAVL));
 }
 
-// Função que exibe o relatorio final segundo a ordem de remoção da raiz
 void exibeRelatorio(AVLtree * arvoreAVL){
 	printf("-+- Inicio relatorio -+-\n");
 	printf ("%d\n", getQuantidadeNos(arvoreAVL));

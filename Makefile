@@ -14,7 +14,7 @@ H_SOURCE = $(wildcard ./lib/*.h)
 # Arquivos objetos .o encontrados em obj/ após compilação
 OBJ = $(subst .c,.o,$(subst src,obj,$(C_SOURCE)))
 
-# Compilador utilizado em testes: gcc (GCC) 7.2.1 20171224  
+# Compilador utilizado
 CC = gcc
 
 # Flags utilizadas na compilação
@@ -31,28 +31,32 @@ MKDIR = mkdir -p
 # Comando de limpeza de alvos 
 RM = rm -rf
 
+GREEN=\033[0;32m
+NC=\033[0m
+
 # Regras de compilação
 all: objFolder $(PROJ_NAME)
 
 $(PROJ_NAME): $(OBJ)
-	@ echo '[BUILD] Construindo binário $@...'
 	@ $(CC) $^ -o $@
-	@ echo '[DONE] Build completo'
-	
+	@ echo -e -n " [${GREEN} OK ${NC}]"
+	@ echo " Binário construido: $@"
+
 ./obj/%.o: ./src/%.c ./lib/%.h
-	@ echo '[COMPILE] Compilando objeto $@...'
 	@ $(CC) $< $(CC_FLAGS) -o $@
+	@ echo -e -n " [${GREEN} OK ${NC}]"
+	@ echo " Compilado $< em $@"
 
-# Regra de criação de diretório para os objetos		
+# Regra de criação de diretório para os objetos
 objFolder:
-	@ echo '[MAKE] Criando diretório para objetos...'
 	@ $(MKDIR) obj
-	@ echo '[DONE] Diretório criado'
+	@ echo -e -n " [${GREEN} OK ${NC}]"
+	@ echo ' Criado diretório para objetos' 
 
-# Regra de limpeza de objetos e executável	
+# Regra de limpeza de objetos e executável
 clean:
-	@ echo '[CLEAN] Limpando sujeira criada...'
 	@ $(RM) obj $(PROJ_NAME) *~
-	@ echo '[DONE] Limpeza concluída'
-	
+	@ echo -e -n " [${GREEN} OK ${NC}]"
+	@ echo ' Workspace limpo'
+
 .PHONY: all clean
