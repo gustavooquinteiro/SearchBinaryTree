@@ -1,4 +1,7 @@
 # SearchBinaryTree
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ad1d09680f054a9b90c58bd54e7115f4)](https://app.codacy.com/app/gustavooquinteiro/SearchBinaryTree?utm_source=github.com&utm_medium=referral&utm_content=gustavooquinteiro/SearchBinaryTree&utm_campaign=Badge_Grade_Dashboard)
+
 Implementação de uma árvore AVL
 
 # Proposito
