@@ -5,6 +5,4 @@ Implementação de uma árvore AVL como parte da avaliação da matéria Estrutu
 Esse código está sob a [Lesser GNU Public License v3.0](LICENSE)
 
 ## Autores
-Para critérios de direitos autorais, os autores envolvidos no desenvolvimento desse programa estão listados em [AUTHORS](AUTHORS) 
-
-
+Para critérios de direitos autorais, os autores envolvidos no desenvolvimento desse programa estão listados em [AUTHORS](AUTHORS)
