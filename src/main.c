@@ -6,13 +6,13 @@ int main(){
 	while (scanf("%c", &opcao) && opcao != END){
 		switch(opcao){
 			case INSERT:
-				insereNo(arvoreAVL);
+				arvoreAVL = insereNo(arvoreAVL);
 			break;
 			case SEARCH:
 				buscaNo(arvoreAVL);
 			break;
 			case REMOVE:
-				removeNo(arvoreAVL);
+				arvoreAVL = removeNo(arvoreAVL);
 			break;
 			case ORDER_LIST:
 				listarNos(arvoreAVL);
@@ -29,11 +29,11 @@ int main(){
 	exit(EXIT_SUCCESS);
 }
 
-void insereNo(AVLtree * arvoreAVL){
+AVLtree * insereNo(AVLtree * arvoreAVL){
 	long long int codigoCliente, valor, operacao;
 	scanf("%lld %lld %lld", &codigoCliente, &operacao, &valor);
 	Client * cliente = criarCliente(codigoCliente, operacao, valor);
-	arvoreAVL = definirRaiz(arvoreAVL, cliente);
+	return definirRaiz(arvoreAVL, cliente);
 }
 
 void buscaNo(AVLtree * arvoreAVL){
@@ -42,10 +42,10 @@ void buscaNo(AVLtree * arvoreAVL){
 	printf("%s %lld\n", busca(getRaiz(arvoreAVL), chave)? FOUND_KEY_MESSAGE: NOT_FOUND_KEY_MESSAGE, chave);
 }
 
-void removeNo(AVLtree * arvoreAVL){
+AVLtree * removeNo(AVLtree * arvoreAVL){
 	long long int chave;
 	scanf("%lld", &chave);
-	arvoreAVL = atualizarRaiz(arvoreAVL, chave);
+	return atualizarRaiz(arvoreAVL, chave);
 }
 
 void listarNos(AVLtree * arvoreAVL){

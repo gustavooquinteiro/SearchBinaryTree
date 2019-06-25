@@ -22,13 +22,13 @@
 #define NOT_FOUND_KEY_MESSAGE "nao existe no com chave:"
 
 // Função que insere um nó com um cliente na árvore
-void insereNo(AVLtree * tree);
+AVLtree * insereNo(AVLtree * tree);
 
 // Função que busca determinada chave na árvore e mostra na tela mensagem informativa
 void buscaNo(AVLtree * tree);
 
 // Função que remove determinada chave da árvore, se essa chave existir
-void removeNo(AVLtree * tree);
+AVLtree * removeNo(AVLtree * tree);
 
 // Função que lista os nós segundo ordem inserida
 void listarNos(AVLtree * tree);

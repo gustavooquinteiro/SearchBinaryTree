@@ -104,8 +104,8 @@ int calculaBalanceFactor(Node * no){
 }
 
 Node * rotacaoDireita(Node * x){
-	Node * y = x->left;
 	if(x){
+        Node * y = x->left;
 	  	if (x->dad){
 	    	if (x->dad->left == x){
 	      		x->dad->left = y;
@@ -122,13 +122,14 @@ Node * rotacaoDireita(Node * x){
 
 		x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
 		y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
+        return y;
 	}
-	return y;
+	return x;
 }
 
 Node * rotacaoEsquerda(Node * x){
-	Node * y = x->right;
 	if(x){
+        Node * y = x->right;
 		if (x->dad){
 			if (x->dad->left == x){
 				x->dad->left = y;
@@ -145,8 +146,9 @@ Node * rotacaoEsquerda(Node * x){
 
 		x->height = maximo(calculaAltura(x->left), calculaAltura(x->right)) + ONE;
 		y->height = maximo(calculaAltura(y->left), calculaAltura(y->right)) + ONE;
+        return y;
 	}
-	return y;
+	return x;
 }
 
 Node * rotacaoDuplaDireita(Node * x){
@@ -333,13 +335,11 @@ int calculaQuantidadeNos(Node * raiz){
 
 void cleanTree(AVLtree * arvore){
     free(arvore);
-    arvore = NULL;
 }
 
 void cleanNode(Node * nodeToRemove){
     if (nodeToRemove){
     	removeClient(getClient(nodeToRemove));
     	free(nodeToRemove);
-    	nodeToRemove = NULL;
     }
 }

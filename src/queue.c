@@ -71,6 +71,4 @@ int size(Queue * queue){
 void clearQueue(Queue * queue){
 	if (queue)
 		free(queue); 
-	queue = NULL;
-	
 }

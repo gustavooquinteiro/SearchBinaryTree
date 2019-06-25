@@ -77,8 +77,6 @@ void alterarClient(Client* client, long long clientCode, long long value, long l
 }
 
 void removeClient(Client * client){
-	if (client){
+	if (client)
 		free(client);
-	    client = NULL;
-    }
 }
